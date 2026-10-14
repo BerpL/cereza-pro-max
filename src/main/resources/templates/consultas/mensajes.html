@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Cereza Pro Max - Consulta de mensajes</title>
+<link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{layout :: cabecera}"></header>
+<main>
+	<h1>Consulta de mensajes por cliente o campaña</h1>
+	<div class="card">
+		<form th:action="@{/consultas/mensajes}" method="get">
+			<label>Cliente</label>
+			<select name="idCliente">
+				<option value="">-- Todos --</option>
+				<option th:each="c : ${clientes}" th:value="${c.idCliente}" th:text="${c.nombre}" th:selected="${c.idCliente == idCliente}"></option>
+			</select>
+			<label>Campaña</label>
+			<select name="idCampana">
+				<option value="">-- Todas --</option>
+				<option th:each="k : ${campanas}" th:value="${k.idCampana}" th:text="${k.nombre}" th:selected="${k.idCampana == idCampana}"></option>
+			</select>
+			<br><br>
+			<button class="btn" type="submit">Consultar</button>
+		</form>
+	</div>
+	<div class="card" th:if="${mensajes != null}">
+		<table>
+			<tr><th>ID</th><th>Cliente</th><th>Campaña</th><th>Contenido</th><th>Estado de envío</th><th>Fecha</th></tr>
+			<tr th:each="m : ${mensajes}">
+				<td th:text="${m.idMensaje}"></td>
+				<td th:text="${m.atencion.cliente.nombre}"></td>
+				<td th:text="${m.campana != null} ? ${m.campana.nombre} : '-'"></td>
+				<td th:text="${m.contenido}"></td>
+				<td><span th:classappend="${m.estadoEnvio == 'ENVIADO'} ? 'tag' : 'tag off'" th:text="${m.estadoEnvio}"></span></td>
+				<td th:text="${#temporals.format(m.fechaEnvio, 'dd/MM/yyyy HH:mm')}"></td>
+			</tr>
+		</table>
+	</div>
+</main>
+</body>
+</html>
