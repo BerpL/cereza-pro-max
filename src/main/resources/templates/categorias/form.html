@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Cereza Pro Max - Categoría</title>
+<link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{layout :: cabecera}"></header>
+<main>
+	<h1 th:text="${categoria.idCategoria == null} ? 'Registrar categoría' : 'Editar categoría'"></h1>
+	<div class="card">
+		<form th:action="@{/categorias/guardar}" th:object="${categoria}" method="post">
+			<input type="hidden" th:field="*{idCategoria}">
+			<input type="hidden" th:field="*{estado}">
+			<label>Nombre</label><input th:field="*{nombre}">
+			<p class="error" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></p>
+			<label>Descripción</label><input th:field="*{descripcion}">
+			<br><br>
+			<button class="btn" type="submit">Guardar</button>
+			<a class="btn sec" th:href="@{/categorias}">Cancelar</a>
+		</form>
+	</div>
+</main>
+</body>
+</html>

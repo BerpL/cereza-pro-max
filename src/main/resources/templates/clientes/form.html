@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Cereza Pro Max - Cliente</title>
+<link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{layout :: cabecera}"></header>
+<main>
+	<h1 th:text="${cliente.idCliente == null} ? 'Registrar cliente' : 'Editar cliente'"></h1>
+	<div class="card">
+		<form th:action="@{/clientes/guardar}" th:object="${cliente}" method="post">
+			<input type="hidden" th:field="*{idCliente}">
+			<input type="hidden" th:field="*{estado}">
+			<input type="hidden" th:field="*{fechaRegistro}">
+			<label>Nombre</label><input th:field="*{nombre}">
+			<p class="error" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></p>
+			<label>Teléfono (WhatsApp)</label><input th:field="*{telefono}">
+			<p class="error" th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"></p>
+			<label>Correo</label><input th:field="*{correo}">
+			<br><br>
+			<button class="btn" type="submit">Guardar</button>
+			<a class="btn sec" th:href="@{/clientes}">Cancelar</a>
+		</form>
+	</div>
+</main>
+</body>
+</html>

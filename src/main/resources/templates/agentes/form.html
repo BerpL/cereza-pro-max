@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Cereza Pro Max - Agente</title>
+<link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{layout :: cabecera}"></header>
+<main>
+	<h1 th:text="${agente.idAgente == null} ? 'Registrar agente' : 'Editar agente'"></h1>
+	<div class="card">
+		<form th:action="@{/agentes/guardar}" th:object="${agente}" method="post">
+			<input type="hidden" th:field="*{idAgente}">
+			<input type="hidden" th:field="*{estado}">
+			<label>Nombre</label><input th:field="*{nombre}">
+			<p class="error" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></p>
+			<label>Turno</label>
+			<select th:field="*{turno}">
+				<option value="MAÑANA">Mañana</option>
+				<option value="TARDE">Tarde</option>
+				<option value="NOCHE">Noche</option>
+			</select>
+			<br><br>
+			<button class="btn" type="submit">Guardar</button>
+			<a class="btn sec" th:href="@{/agentes}">Cancelar</a>
+		</form>
+	</div>
+</main>
+</body>
+</html>

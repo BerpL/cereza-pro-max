@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Cereza Pro Max - clientes</title>
+<link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{layout :: cabecera}"></header>
+<main>
+	<h1>Mantenimiento de clientes</h1>
+	<a class="btn" th:href="@{/clientes/nuevo}">Nuevo registro</a>
+	<br><br>
+	<div class="card">
+		<table>
+			<tr><th>ID</th><th>Nombre</th><th>Teléfono</th><th>Correo</th><th>Estado</th><th>Acciones</th></tr>
+			<tr th:each="x : ${clientes}">
+				<td th:text="${x.idCliente}"></td><td th:text="${x.nombre}"></td><td th:text="${x.telefono}"></td><td th:text="${x.correo}"></td>
+				<td><span th:classappend="${x.estado == 'ACTIVO'} ? 'tag' : 'tag off'" th:text="${x.estado}"></span></td>
+				<td>
+					<a th:href="@{/clientes/editar/{id}(id=${x.idCliente})}">Editar</a> ·
+					<a th:href="@{/clientes/estado/{id}(id=${x.idCliente})}">Cambiar estado</a>
+				</td>
+			</tr>
+		</table>
+	</div>
+</main>
+</body>
+</html>
