@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Cereza Pro Max - Panel</title>
+<link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{layout :: cabecera}"></header>
+<main>
+	<h1>Panel de atención</h1>
+	<div class="kpis">
+		<div class="kpi">Clientes<span th:text="${totalClientes}">0</span></div>
+		<div class="kpi">Agentes<span th:text="${totalAgentes}">0</span></div>
+		<div class="kpi">Atenciones<span th:text="${totalAtenciones}">0</span></div>
+		<div class="kpi">Mensajes<span th:text="${totalMensajes}">0</span></div>
+	</div>
+	<br>
+	<div class="card">
+		<h2>Últimas atenciones</h2>
+		<table>
+			<tr><th>ID</th><th>Cliente</th><th>Agente</th><th>Categoría</th><th>Fecha</th><th>Estado</th></tr>
+			<tr th:each="a : ${ultimas}">
+				<td th:text="${a.idAtencion}"></td>
+				<td th:text="${a.cliente.nombre}"></td>
+				<td th:text="${a.agente.nombre}"></td>
+				<td th:text="${a.categoria.nombre}"></td>
+				<td th:text="${#temporals.format(a.fecha, 'dd/MM/yyyy HH:mm')}"></td>
+				<td><span class="tag" th:text="${a.estado}"></span></td>
+			</tr>
+		</table>
+	</div>
+</main>
+</body>
+</html>

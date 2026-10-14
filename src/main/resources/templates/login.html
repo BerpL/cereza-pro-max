@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Cereza Pro Max - Iniciar sesión</title>
+<link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<main>
+	<div class="card login">
+		<h1>Cereza Pro Max</h1>
+		<p>Ingrese sus credenciales para acceder al sistema.</p>
+		<form th:action="@{/login}" method="post">
+			<label>Correo</label>
+			<input type="email" name="correo" required>
+			<label>Contraseña</label>
+			<input type="password" name="password" required>
+			<p class="error" th:if="${error}" th:text="${error}"></p>
+			<br>
+			<button class="btn" type="submit">Ingresar</button>
+		</form>
+	</div>
+</main>
+</body>
+</html>
