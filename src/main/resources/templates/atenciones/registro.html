@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Cereza Pro Max - Registrar atención</title>
+<link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{layout :: cabecera}"></header>
+<main>
+	<h1>Registrar atención con envío de mensajes</h1>
+	<div class="card">
+		<form th:action="@{/atenciones/registrar}" method="post">
+			<label>Cliente</label>
+			<select name="idCliente" required>
+				<option th:each="c : ${clientes}" th:value="${c.idCliente}" th:text="${c.nombre + ' (' + c.telefono + ')'}"></option>
+			</select>
+			<label>Agente</label>
+			<select name="idAgente" required>
+				<option th:each="a : ${agentes}" th:value="${a.idAgente}" th:text="${a.nombre}"></option>
+			</select>
+			<label>Categoría de atención</label>
+			<select name="idCategoria" required>
+				<option th:each="k : ${categorias}" th:value="${k.idCategoria}" th:text="${k.nombre}"></option>
+			</select>
+			<label>Campaña (opcional)</label>
+			<select name="idCampana">
+				<option value="">-- Sin campaña --</option>
+				<option th:each="k : ${campanas}" th:value="${k.idCampana}" th:text="${k.nombre}"></option>
+			</select>
+			<label>Mensaje 1</label><input name="mensajes" required>
+			<label>Mensaje 2</label><input name="mensajes">
+			<label>Mensaje 3</label><input name="mensajes">
+			<br><br>
+			<button class="btn" type="submit">Registrar y enviar</button>
+		</form>
+	</div>
+</main>
+</body>
+</html>

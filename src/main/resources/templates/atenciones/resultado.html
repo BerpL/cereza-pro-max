@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Cereza Pro Max - Atención registrada</title>
+<link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{layout :: cabecera}"></header>
+<main>
+	<h1>Atención registrada</h1>
+	<div class="card">
+		<p>Atención <strong th:text="${atencion.idAtencion}"></strong> del cliente
+			<strong th:text="${atencion.cliente.nombre}"></strong>, estado <span class="tag" th:text="${atencion.estado}"></span>.</p>
+		<table>
+			<tr><th>Mensaje</th><th>Estado de envío</th></tr>
+			<tr th:each="m : ${atencion.mensajes}">
+				<td th:text="${m.contenido}"></td>
+				<td><span th:classappend="${m.estadoEnvio == 'ENVIADO'} ? 'tag' : 'tag off'" th:text="${m.estadoEnvio}"></span></td>
+			</tr>
+		</table>
+		<br>
+		<a class="btn" th:href="@{/atenciones/registro}">Registrar otra atención</a>
+		<a class="btn sec" th:href="@{/}">Volver al panel</a>
+	</div>
+</main>
+</body>
+</html>
