@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Cereza Pro Max - Reporte de envíos por estado</title>
+<link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{layout :: cabecera}"></header>
+<main>
+	<h1>Reporte de envíos de mensajes por estado</h1>
+	<div class="card">
+		<table>
+			<tr><th>Estado de envío</th><th>Cantidad de mensajes</th><th>Gráfico</th></tr>
+			<tr th:each="f : ${filas}">
+				<td><span th:classappend="${f[0] == 'ENVIADO'} ? 'tag' : 'tag off'" th:text="${f[0]}"></span></td>
+				<td th:text="${f[1]}"></td>
+				<td><div th:style="'height:16px;background:#b3133b;width:' + (${f[1]} * 40) + 'px'"></div></td>
+			</tr>
+		</table>
+		<br>
+		<a class="btn" th:href="@{/reportes/atenciones-por-agente}">Reporte de atenciones por agente</a>
+		<button class="btn sec" type="button" onclick="window.print()">Imprimir / PDF</button>
+	</div>
+</main>
+</body>
+</html>
