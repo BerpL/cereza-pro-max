@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Cereza Pro Max - Reporte de atenciones por agente</title>
+<link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{layout :: cabecera}"></header>
+<main>
+	<h1>Reporte de atenciones por agente</h1>
+	<div class="card">
+		<form th:action="@{/reportes/atenciones-por-agente}" method="get">
+			<label>Desde</label><input type="date" name="desde" th:value="${desde}" required>
+			<label>Hasta</label><input type="date" name="hasta" th:value="${hasta}" required>
+			<br><br>
+			<button class="btn" type="submit">Generar reporte</button>
+			<a class="btn sec" th:href="@{/reportes/envios-por-estado}">Reporte de envíos por estado</a>
+			<button class="btn sec" type="button" onclick="window.print()">Imprimir / PDF</button>
+		</form>
+	</div>
+	<div class="card">
+		<p>Periodo del <strong th:text="${#temporals.format(desde, 'dd/MM/yyyy')}"></strong> al <strong th:text="${#temporals.format(hasta, 'dd/MM/yyyy')}"></strong></p>
+		<table>
+			<tr><th>Agente</th><th>Total de atenciones</th><th>Atendidas</th><th>Pendientes / en curso</th></tr>
+			<tr th:each="f : ${filas}">
+				<td th:text="${f[0]}"></td>
+				<td th:text="${f[1]}"></td>
+				<td th:text="${f[2]}"></td>
+				<td th:text="${f[1] - f[2]}"></td>
+			</tr>
+		</table>
+		<p th:if="${#lists.isEmpty(filas)}">No hay atenciones en el periodo.</p>
+	</div>
+</main>
+</body>
+</html>

@@ -14,6 +14,7 @@
 		<a th:href="@{/agentes}" th:if="${session.rol == 'ADMINISTRADOR'}">Agentes</a>
 		<a th:href="@{/categorias}" th:if="${session.rol == 'ADMINISTRADOR'}">Categorías</a>
 		<a th:href="@{/consultas/atenciones}" th:if="${session.rol != 'AGENTE'}">Consultas</a>
+		<a th:href="@{/reportes/atenciones-por-agente}" th:if="${session.rol != 'AGENTE'}">Reportes</a>
 		<a th:href="@{/atenciones/registro}" th:if="${session.rol != 'SUPERVISOR'}">Registrar atención</a>
 		<a th:href="@{/logout}" th:text="'Salir (' + ${session.usuario.nombre} + ')'">Salir</a>
 	</nav>
