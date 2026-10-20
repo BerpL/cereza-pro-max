@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Cereza Pro Max - Bandeja de atención</title><link rel="stylesheet" th:href="@{/css/app.css(v=5)}"></head>
+<body th:replace="~{layout :: shell('bandeja', ${ {{'Operación', null}, {'Bandeja de atención', null}} })}">
+<main id="page">
+	<div class="page-head"><div><div class="eyebrow">Operación</div><h1>Bandeja de atención</h1></div>
+		<p th:if="${agente != null}" th:text="'Atendiendo como ' + ${agente.nombre}"></p></div>
+	<div class="inbox">
+		<!-- conversaciones -->
+		<section class="col">
+			<div class="col-h"><h2>Conversaciones</h2><span class="eyebrow" th:text="${#lists.size(conversaciones)} + ' clientes'"></span></div>
+			<div class="convs">
+				<a th:each="c : ${conversaciones}" class="conv" th:classappend="${cliente != null and c.cliente.idCliente == cliente.idCliente}?'active'" th:href="@{/bandeja(idCliente=${c.cliente.idCliente})}">
+					<div class="av" th:text="${#strings.substring(c.cliente.nombre,0,1)}">J</div>
+					<div class="cb">
+						<b><span th:text="${c.cliente.nombre}"></span><small th:text="${c.ultimo != null and c.ultimo.fechaEnvio != null} ? ${#temporals.format(c.ultimo.fechaEnvio, 'dd/MM HH:mm')} : ''"></small></b>
+						<span th:text="${c.ultimo != null} ? ${c.ultimo.contenido} : 'Sin mensajes todavía'"></span>
+						<div class="cnt" th:text="${c.totalAtenciones} + ' atenciones · ' + ${c.totalMensajes} + ' mensajes'"></div>
+					</div>
+				</a>
+				<div class="empty" th:if="${#lists.isEmpty(conversaciones)}">No hay clientes activos.</div>
+			</div>
+		</section>
+		<!-- hilo -->
+		<section class="col" th:if="${cliente != null}">
+			<div class="col-h"><div><h2 th:text="${cliente.nombre}"></h2><span class="eyebrow" th:text="${cliente.telefono}"></span></div>
+				<a class="btn sec" th:href="@{/consultas/mensajes(idCliente=${cliente.idCliente})}"><svg th:replace="~{layout :: ic('search')}"></svg>Ver historial</a></div>
+			<div class="chat" id="chat">
+				<div class="sys" th:if="${#lists.isEmpty(hilo)}"><b>Sin atenciones</b>Este cliente aún no tiene atenciones registradas. Escribe el primer mensaje abajo.</div>
+				<th:block th:each="a : ${hilo}">
+					<div class="day" th:text="'Atención #' + ${a.idAtencion} + ' · ' + ${#temporals.format(a.fecha, 'dd MMM yyyy HH:mm')}"></div>
+					<div class="sys"><b th:text="${a.categoria.nombre}"></b><span th:text="'Atendió ' + ${a.agente.nombre} + ' · estado ' + ${a.estado}"></span></div>
+					<div th:each="m : ${a.mensajes}" class="bubble" th:classappend="${m.estadoEnvio=='DUPLICADO'}?'dup':(${m.estadoEnvio=='PENDIENTE'}?'pend':'')">
+						<p th:text="${m.contenido}"></p>
+						<div class="meta"><span th:text="${m.campana != null} ? ${m.campana.nombre} : ''"></span><span><span class="st" th:text="${m.estadoEnvio}"></span> <span th:text="${m.fechaEnvio != null} ? '· ' + ${#temporals.format(m.fechaEnvio, 'HH:mm')} : ''"></span></span></div>
+					</div>
+				</th:block>
+			</div>
+			<form class="composer" th:if="${puedeResponder}" th:action="@{/bandeja/enviar}" method="post">
+				<input type="hidden" name="idCliente" th:value="${cliente.idCliente}">
+				<div class="row">
+					<div><label>Categoría</label><select name="idCategoria" required><option th:each="k : ${categorias}" th:value="${k.idCategoria}" th:text="${k.nombre}"></option></select></div>
+					<div><label>Campaña</label><select name="idCampana"><option value="">Sin campaña</option><option th:each="k : ${campanas}" th:value="${k.idCampana}" th:text="${k.nombre}"></option></select></div>
+				</div>
+				<textarea name="contenido" required placeholder="Escribe la respuesta para el cliente. Una línea por mensaje."></textarea>
+				<div class="send"><small>Se registra como una atención con sus mensajes en una sola transacción. Los repetidos se marcan DUPLICADO.</small><button class="btn" type="submit"><svg th:replace="~{layout :: ic('send')}"></svg>Enviar</button></div>
+			</form>
+			<div class="composer" th:unless="${puedeResponder}"><small style="color:var(--mute)">El rol Supervisor solo consulta las conversaciones.</small></div>
+		</section>
+		<section class="col" th:if="${cliente == null}"><div class="empty"><svg th:replace="~{layout :: ic('chat')}"></svg><div>Selecciona una conversación.</div></div></section>
+		<!-- cliente -->
+		<aside class="col client" th:if="${cliente != null}">
+			<div class="big" th:text="${#strings.substring(cliente.nombre,0,1)}">J</div>
+			<h3 th:text="${cliente.nombre}"></h3>
+			<div class="sub" th:text="'Cliente desde ' + ${#temporals.format(cliente.fechaRegistro, 'dd/MM/yyyy')}"></div>
+			<dl>
+				<div><dt>WhatsApp</dt><dd th:text="${cliente.telefono}"></dd></div>
+				<div><dt>Correo</dt><dd th:text="${cliente.correo} ?: '—'"></dd></div>
+				<div><dt>Estado</dt><dd><span th:classappend="${cliente.estado == 'ACTIVO'} ? 'tag' : 'tag off'" th:text="${cliente.estado}"></span></dd></div>
+			</dl>
+			<div class="stats">
+				<div><b th:text="${#lists.size(hilo)}">0</b><span>atenciones</span></div>
+				<div><b th:text="${totalMensajes}">0</b><span>mensajes</span></div>
+				<div><b th:text="${duplicados}">0</b><span>duplicados evitados</span></div>
+				<div><b th:text="${totalMensajes - duplicados}">0</b><span>enviados</span></div>
+			</div>
+			<a class="btn sec" th:href="@{/clientes/editar/{id}(id=${cliente.idCliente})}" th:if="${session.rol == 'ADMINISTRADOR'}"><svg th:replace="~{layout :: ic('edit')}"></svg>Editar cliente</a>
+		</aside>
+	</div>
+	<script>var c=document.getElementById('chat');if(c){c.scrollTop=c.scrollHeight}</script>
+</main>
+</body>
+</html>

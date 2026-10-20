@@ -16,6 +16,10 @@ public interface MensajeRepository extends JpaRepository<Mensaje, Integer> {
 	List<Mensaje> buscarPorClienteOCampana(@Param("idCliente") Integer idCliente,
 			@Param("idCampana") Integer idCampana);
 
+	Mensaje findFirstByAtencionClienteIdClienteOrderByIdMensajeDesc(Integer idCliente);
+
+	long countByAtencionClienteIdCliente(Integer idCliente);
+
 	// evita el envio duplicado: mismo contenido para el mismo cliente
 	long countByAtencionClienteIdClienteAndContenidoAndEstadoEnvio(Integer idCliente, String contenido, String estadoEnvio);
 }

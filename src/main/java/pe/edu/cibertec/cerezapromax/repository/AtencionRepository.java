@@ -18,4 +18,8 @@ public interface AtencionRepository extends JpaRepository<Atencion, Integer> {
 			@Param("hasta") LocalDateTime hasta, @Param("estado") String estado);
 
 	List<Atencion> findTop10ByOrderByFechaDesc();
+
+	List<Atencion> findByClienteIdClienteOrderByFechaAsc(Integer idCliente);
+
+	long countByClienteIdCliente(Integer idCliente);
 }

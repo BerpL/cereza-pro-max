@@ -9,4 +9,6 @@ import pe.edu.cibertec.cerezapromax.model.Agente;
 public interface AgenteRepository extends JpaRepository<Agente, Integer> {
 
 	List<Agente> findByEstado(String estado);
+
+	Agente findFirstByUsuarioIdUsuario(Integer idUsuario);
 }
