@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title>Cereza Pro Max</title><link rel="stylesheet" th:href="@{/css/app.css(v=3)}"></head>
+<head><meta charset="UTF-8"><title>Cereza Pro Max</title><link rel="stylesheet" th:href="@{/css/app.css(v=5)}"></head>
 
 <body>
 <!-- logo -->
 <svg th:fragment="logo" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-label="Cereza Pro Max">
-	<path d="M25 7c6.5 2.2 10.5 7.6 11.3 15.2" fill="none" stroke="#5c8a3f" stroke-width="2.4" stroke-linecap="round"/>
-	<path d="M25 7c-5.2 3.4-8.6 8.4-9.6 15.6" fill="none" stroke="#5c8a3f" stroke-width="2.4" stroke-linecap="round"/>
-	<path d="M25 7c3.6-3.6 9.4-4.1 14-1.2-2.6 4.6-8.2 6.3-14 1.2z" fill="#7bb35a"/>
-	<circle cx="15" cy="31" r="9.2" fill="#b3133b"/>
-	<circle cx="35" cy="32.5" r="9.2" fill="#d8143f"/>
-	<ellipse cx="11.6" cy="27.4" rx="2.6" ry="1.6" fill="#fff" opacity=".55" transform="rotate(-25 11.6 27.4)"/>
-	<ellipse cx="31.6" cy="28.9" rx="2.6" ry="1.6" fill="#fff" opacity=".55" transform="rotate(-25 31.6 28.9)"/>
+	<path d="M26 8.5c6.2 2.4 10 7.9 10.6 15.3" fill="none" stroke="#4F7A3C" stroke-width="2" stroke-linecap="round"/>
+	<path d="M26 8.5c-5 3.3-8.3 8.3-9.2 15.4" fill="none" stroke="#4F7A3C" stroke-width="2" stroke-linecap="round"/>
+	<path d="M26 8.5c3.2-4 8.8-5 13.6-2.4-2.3 4.9-7.9 7-13.6 2.4z" fill="#6FA85A"/>
+	<path d="M27.5 7.6l9.5-1" fill="none" stroke="#4F7A3C" stroke-width="1" stroke-linecap="round" opacity=".7"/>
+	<circle cx="16" cy="32" r="8.6" fill="#9E1030"/>
+	<circle cx="35.5" cy="33.5" r="8.6" fill="#C8143A"/>
+	<path d="M12.2 27.6c1.4-1.5 3.4-2.2 5.3-1.9" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".75"/>
+	<path d="M31.7 29.1c1.4-1.5 3.4-2.2 5.3-1.9" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".75"/>
 </svg>
 
 <!-- iconos -->
@@ -51,10 +52,9 @@
 				<a th:href="@{/agentes}" th:classappend="${active=='agentes'}?'active'"><svg th:replace="~{layout :: ic('headset')}"></svg>Agentes</a>
 				<a th:href="@{/categorias}" th:classappend="${active=='categorias'}?'active'"><svg th:replace="~{layout :: ic('tag')}"></svg>Categorías</a>
 			</th:block>
-			<th:block th:if="${session.rol != 'SUPERVISOR'}">
-				<div class="nav-sec">Operación</div>
-				<a th:href="@{/atenciones/registro}" th:classappend="${active=='registro'}?'active'"><svg th:replace="~{layout :: ic('send')}"></svg>Registrar atención</a>
-			</th:block>
+			<div class="nav-sec">Operación</div>
+			<a th:href="@{/bandeja}" th:classappend="${active=='bandeja'}?'active'"><svg th:replace="~{layout :: ic('chat')}"></svg>Bandeja de atención</a>
+			<a th:if="${session.rol != 'SUPERVISOR'}" th:href="@{/atenciones/registro}" th:classappend="${active=='registro'}?'active'"><svg th:replace="~{layout :: ic('send')}"></svg>Registrar atención</a>
 			<th:block th:if="${session.rol != 'AGENTE'}">
 				<div class="nav-sec">Consultas</div>
 				<a th:href="@{/consultas/atenciones}" th:classappend="${active=='c-atenciones'}?'active'"><svg th:replace="~{layout :: ic('search')}"></svg>Atenciones</a>
@@ -82,7 +82,7 @@
 				<a class="btn-out" th:href="@{/logout}"><svg th:replace="~{layout :: ic('out')}"></svg>Salir</a>
 			</div>
 		</div></header>
-		<main class="content" th:insert="~{:: #page}"></main>
+		<main class="content" th:classappend="${active=='bandeja'}?'wide'" th:insert="~{:: #page}"></main>
 	</div>
 </div>
 </body>
