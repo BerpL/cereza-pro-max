@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title>Cereza Pro Max - Agentes</title><link rel="stylesheet" th:href="@{/css/app.css(v=6)}"></head>
+<head><meta charset="UTF-8"><title>Cereza Pro Max - Agentes</title><link rel="stylesheet" th:href="@{/css/app.css(v=7)}"></head>
 <body th:replace="~{layout :: shell('agentes', ${ {{'Mantenimientos', null}, {'Agentes', null}} })}">
 <main id="page">
 	<div class="page-head"><div><h1>Agentes</h1><p>Personal que atiende las solicitudes</p></div><a class="btn" th:href="@{/agentes/nuevo}"><svg th:replace="~{layout :: ic('plus')}"></svg>Nuevo registro</a></div>
 	<div class="card">
-		<table><thead><tr><th>ID</th><th>Nombre</th><th>Turno</th><th>Estado</th><th>Acciones</th></tr></thead>
-		<tbody><tr th:each="x : ${agentes}">
+		<h2 class="with-legend">Registros <span class="n" th:text="${#lists.size(agentes)}">0</span><span class="sem-legend"><span><i class="sem-ok"></i>Activo</span><span><i class="sem-off"></i>Inactivo</span></span></h2>
+		<table><thead><tr><th>ID</th><th>Nombre</th><th>Turno</th><th>Acciones</th></tr></thead>
+		<tbody><tr th:each="x : ${agentes}" th:classappend="${x.estado == 'ACTIVO'} ? 'r-ok' : 'r-off'">
 			<td class="num" th:text="${x.idAgente}"></td><td><b th:text="${x.nombre}"></b></td><td th:text="${#strings.capitalize(#strings.toLowerCase(x.turno))}"></td>
-			<td><span th:classappend="${x.estado == 'ACTIVO'} ? 'tag' : 'tag off'" th:text="${x.estado}"></span></td>
 			<td><div class="row-actions">
 				<a th:href="@{/agentes/editar/{id}(id=${x.idAgente})}"><svg th:replace="~{layout :: ic('edit')}"></svg>Editar</a>
-				<a th:href="@{/agentes/estado/{id}(id=${x.idAgente})}"><svg th:replace="~{layout :: ic('toggle')}"></svg>Cambiar estado</a>
+				<a th:href="@{/agentes/estado/{id}(id=${x.idAgente})}"><svg th:replace="~{layout :: ic('toggle')}"></svg><span th:text="${x.estado == 'ACTIVO'} ? 'Desactivar' : 'Activar'"></span></a>
 			</div></td>
 		</tr></tbody></table>
 		<div class="empty" th:if="${#lists.isEmpty(agentes)}"><svg th:replace="~{layout :: ic('inbox')}"></svg><div>No hay registros todavía.</div></div>

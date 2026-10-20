@@ -20,6 +20,8 @@ public interface MensajeRepository extends JpaRepository<Mensaje, Integer> {
 
 	long countByAtencionClienteIdCliente(Integer idCliente);
 
+	long countByEstadoEnvio(String estadoEnvio);
+
 	// evita el envio duplicado: mismo contenido para el mismo cliente
 	long countByAtencionClienteIdClienteAndContenidoAndEstadoEnvio(Integer idCliente, String contenido, String estadoEnvio);
 }

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title>Cereza Pro Max - Reporte de envíos por estado</title><link rel="stylesheet" th:href="@{/css/app.css(v=6)}"></head>
+<head><meta charset="UTF-8"><title>Cereza Pro Max - Reporte de envíos por estado</title><link rel="stylesheet" th:href="@{/css/app.css(v=7)}"></head>
 <body th:replace="~{layout :: shell('r-estado', ${ {{'Reportes', null}, {'Envíos por estado', null}} })}">
 <main id="page">
 	<div class="page-head"><div><h1>Envíos de mensajes por estado</h1><p>Cuántos mensajes se enviaron y cuántos duplicados se evitaron</p></div><button class="btn sec" type="button" onclick="window.print()"><svg th:replace="~{layout :: ic('print')}"></svg>Imprimir / PDF</button></div>

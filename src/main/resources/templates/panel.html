@@ -1,22 +1,21 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title>Cereza Pro Max - Panel</title><link rel="stylesheet" th:href="@{/css/app.css(v=6)}"></head>
+<head><meta charset="UTF-8"><title>Cereza Pro Max - Panel</title><link rel="stylesheet" th:href="@{/css/app.css(v=7)}"></head>
 <body th:replace="~{layout :: shell('panel', ${ {{'Panel', null}} })}">
 <main id="page">
-	<div class="page-head"><div><h1>Panel de atención</h1><p>Resumen del contact center</p></div>
+	<div class="page-head"><div><h1>Panel de atención</h1><p th:text="${#strings.capitalize(#temporals.format(#temporals.createNow(), 'EEEE d MMMM yyyy', new java.util.Locale('es','PE')))}"></p></div>
 		<a class="btn" th:href="@{/bandeja}"><svg th:replace="~{layout :: ic('chat')}"></svg>Ir a la bandeja</a></div>
 	<div class="kpis">
 		<div class="kpi"><div class="ic"><svg th:replace="~{layout :: ic('users')}"></svg></div><div class="eyebrow">Clientes</div><b th:text="${totalClientes}">0</b><span>registrados en el sistema</span></div>
 		<div class="kpi"><div class="ic"><svg th:replace="~{layout :: ic('headset')}"></svg></div><div class="eyebrow">Agentes</div><b th:text="${totalAgentes}">0</b><span>registrados en el sistema</span></div>
 		<div class="kpi"><div class="ic"><svg th:replace="~{layout :: ic('inbox')}"></svg></div><div class="eyebrow">Atenciones</div><b th:text="${totalAtenciones}">0</b><span>registrados en el sistema</span></div>
-		<div class="kpi"><div class="ic"><svg th:replace="~{layout :: ic('chat')}"></svg></div><div class="eyebrow">Mensajes</div><b th:text="${totalMensajes}">0</b><span>registrados en el sistema</span></div>
+		<div class="kpi hero"><div class="ic"><svg th:replace="~{layout :: ic('shield')}"></svg></div><div class="eyebrow">Duplicados evitados</div><b th:text="${duplicados}">0</b><span th:text="'de ' + ${totalMensajes} + ' mensajes procesados'"></span></div>
 	</div>
-	<div class="card"><h2>Últimas atenciones <span class="n" th:text="${#lists.size(ultimas)}">0</span></h2>
-		<table><thead><tr><th>ID</th><th>Cliente</th><th>Agente</th><th>Categoría</th><th>Fecha</th><th>Estado</th></tr></thead>
-		<tbody><tr th:each="a : ${ultimas}">
+	<div class="card"><h2 class="with-legend">Últimas atenciones <span class="n" th:text="${#lists.size(ultimas)}">0</span><span class="sem-legend"><span><i class="sem-ok"></i>Atendida</span><span><i class="sem-warn"></i>Pendiente</span><span><i class="sem-info"></i>En curso</span></span></h2>
+		<table><thead><tr><th>ID</th><th>Cliente</th><th>Agente</th><th>Categoría</th><th>Fecha</th></tr></thead>
+		<tbody><tr th:each="a : ${ultimas}" th:classappend="${a.estado=='ATENDIDA'}?'r-ok':(${a.estado=='PENDIENTE'}?'r-warn':'r-info')">
 			<td class="num" th:text="${a.idAtencion}"></td><td><b th:text="${a.cliente.nombre}"></b></td><td th:text="${a.agente.nombre}"></td><td th:text="${a.categoria.nombre}"></td>
 			<td th:text="${#temporals.format(a.fecha, 'dd/MM/yyyy HH:mm')}"></td>
-			<td><span th:classappend="${a.estado=='ATENDIDA'}?'tag':(${a.estado=='PENDIENTE'}?'tag warn':'tag info')" th:text="${a.estado}"></span></td>
 		</tr></tbody></table>
 	</div>
 </main>

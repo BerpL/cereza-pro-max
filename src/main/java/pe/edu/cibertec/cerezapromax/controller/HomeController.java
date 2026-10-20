@@ -35,6 +35,7 @@ public class HomeController {
 		model.addAttribute("totalAgentes", agenteRepository.count());
 		model.addAttribute("totalAtenciones", atencionRepository.count());
 		model.addAttribute("totalMensajes", mensajeRepository.count());
+		model.addAttribute("duplicados", mensajeRepository.countByEstadoEnvio("DUPLICADO"));
 		model.addAttribute("ultimas", atencionRepository.findTop10ByOrderByFechaDesc());
 		return "panel";
 	}

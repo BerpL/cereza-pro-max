@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title>Cereza Pro Max - Consulta de atenciones</title><link rel="stylesheet" th:href="@{/css/app.css(v=6)}"></head>
+<head><meta charset="UTF-8"><title>Cereza Pro Max - Consulta de atenciones</title><link rel="stylesheet" th:href="@{/css/app.css(v=7)}"></head>
 <body th:replace="~{layout :: shell('c-atenciones', ${ {{'Consultas', null}, {'Atenciones', null}} })}">
 <main id="page">
 	<div class="page-head"><div><h1>Consulta de atenciones</h1><p>Filtra por rango de fechas y estado</p></div></div>
@@ -13,11 +13,10 @@
 		</div>
 	</form>
 	<div class="card" th:if="${atenciones != null}">
-		<h2>Resultados <span class="n" th:text="${#lists.size(atenciones)}">0</span></h2>
-		<table th:if="${!#lists.isEmpty(atenciones)}"><thead><tr><th>ID</th><th>Fecha</th><th>Cliente</th><th>Agente</th><th>Categoría</th><th>Estado</th><th>Mensajes</th><th></th></tr></thead>
-		<tbody><tr th:each="a : ${atenciones}">
+		<h2 class="with-legend">Resultados <span class="n" th:text="${#lists.size(atenciones)}">0</span><span class="sem-legend"><span><i class="sem-ok"></i>Atendida</span><span><i class="sem-warn"></i>Pendiente</span><span><i class="sem-info"></i>En curso</span></span></h2>
+		<table th:if="${!#lists.isEmpty(atenciones)}"><thead><tr><th>ID</th><th>Fecha</th><th>Cliente</th><th>Agente</th><th>Categoría</th><th>Mensajes</th><th></th></tr></thead>
+		<tbody><tr th:each="a : ${atenciones}" th:classappend="${a.estado=='ATENDIDA'}?'r-ok':(${a.estado=='PENDIENTE'}?'r-warn':'r-info')">
 			<td class="num" th:text="${a.idAtencion}"></td><td th:text="${#temporals.format(a.fecha, 'dd/MM/yyyy HH:mm')}"></td><td><b th:text="${a.cliente.nombre}"></b></td><td th:text="${a.agente.nombre}"></td><td th:text="${a.categoria.nombre}"></td>
-			<td><span th:classappend="${a.estado=='ATENDIDA'}?'tag':(${a.estado=='PENDIENTE'}?'tag warn':'tag info')" th:text="${a.estado}"></span></td>
 			<td th:text="${a.mensajes.size()}"></td>
 			<td><div class="row-actions"><a th:href="@{/bandeja(idCliente=${a.cliente.idCliente})}"><svg th:replace="~{layout :: ic('chat')}"></svg>Abrir chat</a></div></td>
 		</tr></tbody></table>

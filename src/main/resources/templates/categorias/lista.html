@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title>Cereza Pro Max - Categorías de atención</title><link rel="stylesheet" th:href="@{/css/app.css(v=6)}"></head>
+<head><meta charset="UTF-8"><title>Cereza Pro Max - Categorías de atención</title><link rel="stylesheet" th:href="@{/css/app.css(v=7)}"></head>
 <body th:replace="~{layout :: shell('categorias', ${ {{'Mantenimientos', null}, {'Categorías de atención', null}} })}">
 <main id="page">
 	<div class="page-head"><div><h1>Categorías de atención</h1><p>Tipos de solicitud que registra el sistema</p></div><a class="btn" th:href="@{/categorias/nuevo}"><svg th:replace="~{layout :: ic('plus')}"></svg>Nuevo registro</a></div>
 	<div class="card">
-		<table><thead><tr><th>ID</th><th>Nombre</th><th>Descripción</th><th>Estado</th><th>Acciones</th></tr></thead>
-		<tbody><tr th:each="x : ${categorias}">
+		<h2 class="with-legend">Registros <span class="n" th:text="${#lists.size(categorias)}">0</span><span class="sem-legend"><span><i class="sem-ok"></i>Activo</span><span><i class="sem-off"></i>Inactivo</span></span></h2>
+		<table><thead><tr><th>ID</th><th>Nombre</th><th>Descripción</th><th>Acciones</th></tr></thead>
+		<tbody><tr th:each="x : ${categorias}" th:classappend="${x.estado == 'ACTIVO'} ? 'r-ok' : 'r-off'">
 			<td class="num" th:text="${x.idCategoria}"></td><td><b th:text="${x.nombre}"></b></td><td th:text="${x.descripcion}"></td>
-			<td><span th:classappend="${x.estado == 'ACTIVO'} ? 'tag' : 'tag off'" th:text="${x.estado}"></span></td>
 			<td><div class="row-actions">
 				<a th:href="@{/categorias/editar/{id}(id=${x.idCategoria})}"><svg th:replace="~{layout :: ic('edit')}"></svg>Editar</a>
-				<a th:href="@{/categorias/estado/{id}(id=${x.idCategoria})}"><svg th:replace="~{layout :: ic('toggle')}"></svg>Cambiar estado</a>
+				<a th:href="@{/categorias/estado/{id}(id=${x.idCategoria})}"><svg th:replace="~{layout :: ic('toggle')}"></svg><span th:text="${x.estado == 'ACTIVO'} ? 'Desactivar' : 'Activar'"></span></a>
 			</div></td>
 		</tr></tbody></table>
 		<div class="empty" th:if="${#lists.isEmpty(categorias)}"><svg th:replace="~{layout :: ic('inbox')}"></svg><div>No hay registros todavía.</div></div>

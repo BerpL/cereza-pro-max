@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title>Cereza Pro Max - Bandeja de atención</title><link rel="stylesheet" th:href="@{/css/app.css(v=6)}"></head>
+<head><meta charset="UTF-8"><title>Cereza Pro Max - Bandeja de atención</title><link rel="stylesheet" th:href="@{/css/app.css(v=7)}"></head>
 <body th:replace="~{layout :: shell('bandeja', ${ {{'Operación', null}, {'Bandeja de atención', null}} })}">
 <main id="page">
 	<div class="page-head"><div><div class="eyebrow">Operación</div><h1>Bandeja de atención</h1></div>
@@ -8,9 +8,9 @@
 	<div class="inbox">
 		<!-- conversaciones -->
 		<section class="col">
-			<div class="col-h"><h2>Conversaciones</h2><span class="eyebrow" th:text="${#lists.size(conversaciones)} + ' clientes'"></span></div>
+			<div class="col-h"><h2>Conversaciones</h2><span class="sem-legend"><span><i class="sem-ok"></i>Atendida</span><span><i class="sem-warn"></i>Pendiente</span><span><i class="sem-info"></i>En curso</span></span></div>
 			<div class="convs">
-				<a th:each="c : ${conversaciones}" class="conv" th:classappend="${cliente != null and c.cliente.idCliente == cliente.idCliente}?'active'" th:href="@{/bandeja(idCliente=${c.cliente.idCliente})}">
+				<a th:each="c : ${conversaciones}" class="conv" th:classappend="(${cliente != null and c.cliente.idCliente == cliente.idCliente}?'active ':'') + (${c.ultimo == null} ? '' : (${c.ultimo.atencion.estado=='ATENDIDA'}?'s-ok':(${c.ultimo.atencion.estado=='PENDIENTE'}?'s-warn':'s-info')))" th:href="@{/bandeja(idCliente=${c.cliente.idCliente})}">
 					<div class="av" th:text="${#strings.substring(c.cliente.nombre,0,1)}">J</div>
 					<div class="cb">
 						<b><span th:text="${c.cliente.nombre}"></span><small th:text="${c.ultimo != null and c.ultimo.fechaEnvio != null} ? ${#temporals.format(c.ultimo.fechaEnvio, 'dd/MM HH:mm')} : ''"></small></b>
