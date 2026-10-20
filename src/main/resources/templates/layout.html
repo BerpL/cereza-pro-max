@@ -1,8 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title>Cereza Pro Max</title><link rel="stylesheet" th:href="@{/css/app.css(v=2)}"></head>
+<head><meta charset="UTF-8"><title>Cereza Pro Max</title><link rel="stylesheet" th:href="@{/css/app.css(v=3)}"></head>
 
 <body>
+<!-- logo -->
+<svg th:fragment="logo" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-label="Cereza Pro Max">
+	<path d="M25 7c6.5 2.2 10.5 7.6 11.3 15.2" fill="none" stroke="#5c8a3f" stroke-width="2.4" stroke-linecap="round"/>
+	<path d="M25 7c-5.2 3.4-8.6 8.4-9.6 15.6" fill="none" stroke="#5c8a3f" stroke-width="2.4" stroke-linecap="round"/>
+	<path d="M25 7c3.6-3.6 9.4-4.1 14-1.2-2.6 4.6-8.2 6.3-14 1.2z" fill="#7bb35a"/>
+	<circle cx="15" cy="31" r="9.2" fill="#b3133b"/>
+	<circle cx="35" cy="32.5" r="9.2" fill="#d8143f"/>
+	<ellipse cx="11.6" cy="27.4" rx="2.6" ry="1.6" fill="#fff" opacity=".55" transform="rotate(-25 11.6 27.4)"/>
+	<ellipse cx="31.6" cy="28.9" rx="2.6" ry="1.6" fill="#fff" opacity=".55" transform="rotate(-25 31.6 28.9)"/>
+</svg>
+
 <!-- iconos -->
 <svg th:fragment="ic(name)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 	<th:block th:switch="${name}">
@@ -30,7 +41,7 @@
 <!-- cascaron: sidebar + topbar; crumbs = lista de [texto, url] -->
 <body th:fragment="shell(active, crumbs)"><div class="app">
 	<aside class="sidebar">
-		<div class="brand"><div class="logo">CPM</div><div><b>Cereza Pro Max</b><small>Contact Center WhatsApp</small></div></div>
+		<div class="brand"><div class="logo"><svg th:replace="~{layout :: logo}"></svg></div><div><b>Cereza Pro Max</b><small>Contact Center WhatsApp</small></div></div>
 		<nav class="nav">
 			<div class="nav-sec">General</div>
 			<a th:href="@{/}" th:classappend="${active=='panel'}?'active'"><svg th:replace="~{layout :: ic('home')}"></svg>Panel</a>
@@ -56,7 +67,7 @@
 		<div class="foot">Lenguaje de Programación II · Cibertec 2026</div>
 	</aside>
 	<div class="main">
-		<header class="topbar">
+		<header class="topbar"><div class="topbar-in">
 			<nav class="crumbs">
 				<a th:href="@{/}">Inicio</a>
 				<th:block th:each="c, it : ${crumbs}">
@@ -70,7 +81,7 @@
 				<div class="chip"><div class="avatar" th:text="${#strings.substring(session.usuario.nombre,0,1)}">A</div><div><b th:text="${session.usuario.nombre}">Usuario</b><small th:text="${#strings.capitalize(#strings.toLowerCase(session.rol))}">Rol</small></div></div>
 				<a class="btn-out" th:href="@{/logout}"><svg th:replace="~{layout :: ic('out')}"></svg>Salir</a>
 			</div>
-		</header>
+		</div></header>
 		<main class="content" th:insert="~{:: #page}"></main>
 	</div>
 </div>

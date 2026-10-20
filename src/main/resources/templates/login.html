@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title>Cereza Pro Max - Iniciar sesión</title><link rel="stylesheet" th:href="@{/css/app.css(v=2)}"></head>
+<head><meta charset="UTF-8"><title>Cereza Pro Max - Iniciar sesión</title><link rel="stylesheet" th:href="@{/css/app.css(v=3)}"></head>
 <body>
-<div class="login-wrap">
+<div class="login-wrap"><div class="login-frame">
 	<section class="login-side">
 		<div>
-			<div class="brand" style="border:0;padding:0"><div class="logo">CPM</div><div><b>Cereza Pro Max</b><small>Contact Center WhatsApp</small></div></div>
-			<h1>Atención al cliente sin mensajes repetidos</h1>
+			<div class="brand"><div class="logo"><svg th:replace="~{layout :: logo}"></svg></div><div><b>Cereza Pro Max</b><small>Contact Center WhatsApp</small></div></div>
+		</div>
+		<div class="mid">
+			<h1>Atención al cliente<br><em>sin mensajes repetidos</em></h1>
 			<p>Registra clientes, agentes y atenciones en un solo lugar y controla el estado de cada envío.</p>
 			<ul>
 				<li><svg th:replace="~{layout :: ic('check')}"></svg>Registro transaccional de atenciones</li>
@@ -14,7 +16,7 @@
 				<li><svg th:replace="~{layout :: ic('check')}"></svg>Consultas y reportes por agente y estado</li>
 			</ul>
 		</div>
-		<small style="color:#8d8289">Lenguaje de Programación II · Cibertec 2026</small>
+		<small class="foot">Lenguaje de Programación II · Cibertec 2026</small>
 	</section>
 	<section class="login-form">
 		<form class="login-card" th:action="@{/login}" method="post" autocomplete="off">
@@ -23,9 +25,10 @@
 			<div class="field"><label>Correo</label><input type="email" name="correo" placeholder="usuario@cereza.com" autocomplete="off" required></div>
 			<div class="field"><label>Contraseña</label><input type="password" name="password" placeholder="••••••••" autocomplete="new-password" required></div>
 			<p class="error" th:if="${error}" th:text="${error}"></p>
-			<button class="btn" type="submit" style="width:100%;justify-content:center">Ingresar</button>
+			<button class="btn" type="submit">Ingresar</button>
+			<p class="help">Acceso solo para personal autorizado del contact center</p>
 		</form>
 	</section>
-</div>
+</div></div>
 </body>
 </html>
