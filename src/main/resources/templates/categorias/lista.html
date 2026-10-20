@@ -1,28 +1,20 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8">
-<title>Cereza Pro Max - categorías de atención</title>
-<link rel="stylesheet" th:href="@{/css/app.css}">
-</head>
-<body>
-<header th:replace="~{layout :: cabecera}"></header>
-<main>
-	<h1>Mantenimiento de categorías de atención</h1>
-	<a class="btn" th:href="@{/categorias/nuevo}">Nuevo registro</a>
-	<br><br>
+<head><meta charset="UTF-8"><title>Cereza Pro Max - Categorías de atención</title><link rel="stylesheet" th:href="@{/css/app.css(v=2)}"></head>
+<body th:replace="~{layout :: shell('categorias', ${ {{'Mantenimientos', null}, {'Categorías de atención', null}} })}">
+<main id="page">
+	<div class="page-head"><div><h1>Categorías de atención</h1><p>Tipos de solicitud que registra el sistema</p></div><a class="btn" th:href="@{/categorias/nuevo}"><svg th:replace="~{layout :: ic('plus')}"></svg>Nuevo registro</a></div>
 	<div class="card">
-		<table>
-			<tr><th>ID</th><th>Nombre</th><th>Descripción</th><th>Estado</th><th>Acciones</th></tr>
-			<tr th:each="x : ${categorias}">
-				<td th:text="${x.idCategoria}"></td><td th:text="${x.nombre}"></td><td th:text="${x.descripcion}"></td>
-				<td><span th:classappend="${x.estado == 'ACTIVO'} ? 'tag' : 'tag off'" th:text="${x.estado}"></span></td>
-				<td>
-					<a th:href="@{/categorias/editar/{id}(id=${x.idCategoria})}">Editar</a> ·
-					<a th:href="@{/categorias/estado/{id}(id=${x.idCategoria})}">Cambiar estado</a>
-				</td>
-			</tr>
-		</table>
+		<table><thead><tr><th>ID</th><th>Nombre</th><th>Descripción</th><th>Estado</th><th>Acciones</th></tr></thead>
+		<tbody><tr th:each="x : ${categorias}">
+			<td class="num" th:text="${x.idCategoria}"></td><td><b th:text="${x.nombre}"></b></td><td th:text="${x.descripcion}"></td>
+			<td><span th:classappend="${x.estado == 'ACTIVO'} ? 'tag' : 'tag off'" th:text="${x.estado}"></span></td>
+			<td><div class="row-actions">
+				<a th:href="@{/categorias/editar/{id}(id=${x.idCategoria})}"><svg th:replace="~{layout :: ic('edit')}"></svg>Editar</a>
+				<a th:href="@{/categorias/estado/{id}(id=${x.idCategoria})}"><svg th:replace="~{layout :: ic('toggle')}"></svg>Cambiar estado</a>
+			</div></td>
+		</tr></tbody></table>
+		<div class="empty" th:if="${#lists.isEmpty(categorias)}"><svg th:replace="~{layout :: ic('inbox')}"></svg><div>No hay registros todavía.</div></div>
 	</div>
 </main>
 </body>

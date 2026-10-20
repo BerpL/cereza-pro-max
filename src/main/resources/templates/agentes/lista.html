@@ -1,28 +1,20 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8">
-<title>Cereza Pro Max - agentes</title>
-<link rel="stylesheet" th:href="@{/css/app.css}">
-</head>
-<body>
-<header th:replace="~{layout :: cabecera}"></header>
-<main>
-	<h1>Mantenimiento de agentes</h1>
-	<a class="btn" th:href="@{/agentes/nuevo}">Nuevo registro</a>
-	<br><br>
+<head><meta charset="UTF-8"><title>Cereza Pro Max - Agentes</title><link rel="stylesheet" th:href="@{/css/app.css(v=2)}"></head>
+<body th:replace="~{layout :: shell('agentes', ${ {{'Mantenimientos', null}, {'Agentes', null}} })}">
+<main id="page">
+	<div class="page-head"><div><h1>Agentes</h1><p>Personal que atiende las solicitudes</p></div><a class="btn" th:href="@{/agentes/nuevo}"><svg th:replace="~{layout :: ic('plus')}"></svg>Nuevo registro</a></div>
 	<div class="card">
-		<table>
-			<tr><th>ID</th><th>Nombre</th><th>Turno</th><th>Estado</th><th>Acciones</th></tr>
-			<tr th:each="x : ${agentes}">
-				<td th:text="${x.idAgente}"></td><td th:text="${x.nombre}"></td><td th:text="${x.turno}"></td>
-				<td><span th:classappend="${x.estado == 'ACTIVO'} ? 'tag' : 'tag off'" th:text="${x.estado}"></span></td>
-				<td>
-					<a th:href="@{/agentes/editar/{id}(id=${x.idAgente})}">Editar</a> ·
-					<a th:href="@{/agentes/estado/{id}(id=${x.idAgente})}">Cambiar estado</a>
-				</td>
-			</tr>
-		</table>
+		<table><thead><tr><th>ID</th><th>Nombre</th><th>Turno</th><th>Estado</th><th>Acciones</th></tr></thead>
+		<tbody><tr th:each="x : ${agentes}">
+			<td class="num" th:text="${x.idAgente}"></td><td><b th:text="${x.nombre}"></b></td><td th:text="${#strings.capitalize(#strings.toLowerCase(x.turno))}"></td>
+			<td><span th:classappend="${x.estado == 'ACTIVO'} ? 'tag' : 'tag off'" th:text="${x.estado}"></span></td>
+			<td><div class="row-actions">
+				<a th:href="@{/agentes/editar/{id}(id=${x.idAgente})}"><svg th:replace="~{layout :: ic('edit')}"></svg>Editar</a>
+				<a th:href="@{/agentes/estado/{id}(id=${x.idAgente})}"><svg th:replace="~{layout :: ic('toggle')}"></svg>Cambiar estado</a>
+			</div></td>
+		</tr></tbody></table>
+		<div class="empty" th:if="${#lists.isEmpty(agentes)}"><svg th:replace="~{layout :: ic('inbox')}"></svg><div>No hay registros todavía.</div></div>
 	</div>
 </main>
 </body>

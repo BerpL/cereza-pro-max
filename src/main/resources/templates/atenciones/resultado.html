@@ -1,27 +1,22 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8">
-<title>Cereza Pro Max - Atención registrada</title>
-<link rel="stylesheet" th:href="@{/css/app.css}">
-</head>
-<body>
-<header th:replace="~{layout :: cabecera}"></header>
-<main>
-	<h1>Atención registrada</h1>
-	<div class="card">
-		<p>Atención <strong th:text="${atencion.idAtencion}"></strong> del cliente
-			<strong th:text="${atencion.cliente.nombre}"></strong>, estado <span class="tag" th:text="${atencion.estado}"></span>.</p>
-		<table>
-			<tr><th>Mensaje</th><th>Estado de envío</th></tr>
-			<tr th:each="m : ${atencion.mensajes}">
-				<td th:text="${m.contenido}"></td>
-				<td><span th:classappend="${m.estadoEnvio == 'ENVIADO'} ? 'tag' : 'tag off'" th:text="${m.estadoEnvio}"></span></td>
-			</tr>
-		</table>
-		<br>
-		<a class="btn" th:href="@{/atenciones/registro}">Registrar otra atención</a>
-		<a class="btn sec" th:href="@{/}">Volver al panel</a>
+<head><meta charset="UTF-8"><title>Cereza Pro Max - Atención registrada</title><link rel="stylesheet" th:href="@{/css/app.css(v=2)}"></head>
+<body th:replace="~{layout :: shell('registro', ${ {{'Operación', null}, {'Registrar atención', '/atenciones/registro'}, {'Resultado', null}} })}">
+<main id="page">
+	<div class="card" style="max-width:860px">
+		<div class="result-head"><div class="ok-ic"><svg th:replace="~{layout :: ic('check')}"></svg></div><div><h1 style="margin:0;font-size:20px">Atención registrada</h1><p style="margin:2px 0 0;color:var(--muted)">La transacción se confirmó correctamente</p></div></div>
+		<div class="summary">
+			<div><span>Atención</span><b th:text="'#' + ${atencion.idAtencion}"></b></div>
+			<div><span>Cliente</span><b th:text="${atencion.cliente.nombre}"></b></div>
+			<div><span>Agente</span><b th:text="${atencion.agente.nombre}"></b></div>
+			<div><span>Estado</span><b><span class="tag" th:text="${atencion.estado}"></span></b></div>
+		</div>
+		<div class="thread"><div class="th"><b>Mensajes procesados</b><small th:text="${#lists.size(atencion.mensajes)} + ' en total'"></small></div>
+			<div class="body"><div th:each="m : ${atencion.mensajes}" class="bubble" th:classappend="${m.estadoEnvio=='DUPLICADO'}?'dup':''">
+				<p th:text="${m.contenido}"></p>
+				<div class="meta"><span th:text="${m.estadoEnvio=='DUPLICADO'} ? 'Ya se había enviado a este cliente, no se reenvió' : 'Enviado al cliente'"></span><span class="st" th:text="${m.estadoEnvio}"></span></div>
+			</div></div></div>
+		<div class="actions"><a class="btn" th:href="@{/atenciones/registro}"><svg th:replace="~{layout :: ic('plus')}"></svg>Registrar otra atención</a><a class="btn sec" th:href="@{/}"><svg th:replace="~{layout :: ic('back')}"></svg>Volver al panel</a></div>
 	</div>
 </main>
 </body>

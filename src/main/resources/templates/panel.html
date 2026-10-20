@@ -1,34 +1,23 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8">
-<title>Cereza Pro Max - Panel</title>
-<link rel="stylesheet" th:href="@{/css/app.css}">
-</head>
-<body>
-<header th:replace="~{layout :: cabecera}"></header>
-<main>
-	<h1>Panel de atención</h1>
+<head><meta charset="UTF-8"><title>Cereza Pro Max - Panel</title><link rel="stylesheet" th:href="@{/css/app.css(v=2)}"></head>
+<body th:replace="~{layout :: shell('panel', ${ {{'Panel', null}} })}">
+<main id="page">
+	<div class="page-head"><div><h1>Panel de atención</h1><p>Resumen del contact center</p></div>
+		<a th:if="${session.rol != 'SUPERVISOR'}" class="btn" th:href="@{/atenciones/registro}"><svg th:replace="~{layout :: ic('send')}"></svg>Registrar atención</a></div>
 	<div class="kpis">
-		<div class="kpi">Clientes<span th:text="${totalClientes}">0</span></div>
-		<div class="kpi">Agentes<span th:text="${totalAgentes}">0</span></div>
-		<div class="kpi">Atenciones<span th:text="${totalAtenciones}">0</span></div>
-		<div class="kpi">Mensajes<span th:text="${totalMensajes}">0</span></div>
+		<div class="kpi"><div class="ic"><svg th:replace="~{layout :: ic('users')}"></svg></div><div><b th:text="${totalClientes}">0</b><span>Clientes</span></div></div>
+		<div class="kpi"><div class="ic"><svg th:replace="~{layout :: ic('headset')}"></svg></div><div><b th:text="${totalAgentes}">0</b><span>Agentes</span></div></div>
+		<div class="kpi"><div class="ic"><svg th:replace="~{layout :: ic('inbox')}"></svg></div><div><b th:text="${totalAtenciones}">0</b><span>Atenciones</span></div></div>
+		<div class="kpi"><div class="ic"><svg th:replace="~{layout :: ic('chat')}"></svg></div><div><b th:text="${totalMensajes}">0</b><span>Mensajes</span></div></div>
 	</div>
-	<br>
-	<div class="card">
-		<h2>Últimas atenciones</h2>
-		<table>
-			<tr><th>ID</th><th>Cliente</th><th>Agente</th><th>Categoría</th><th>Fecha</th><th>Estado</th></tr>
-			<tr th:each="a : ${ultimas}">
-				<td th:text="${a.idAtencion}"></td>
-				<td th:text="${a.cliente.nombre}"></td>
-				<td th:text="${a.agente.nombre}"></td>
-				<td th:text="${a.categoria.nombre}"></td>
-				<td th:text="${#temporals.format(a.fecha, 'dd/MM/yyyy HH:mm')}"></td>
-				<td><span class="tag" th:text="${a.estado}"></span></td>
-			</tr>
-		</table>
+	<div class="card"><h2>Últimas atenciones <span class="n" th:text="${#lists.size(ultimas)}">0</span></h2>
+		<table><thead><tr><th>ID</th><th>Cliente</th><th>Agente</th><th>Categoría</th><th>Fecha</th><th>Estado</th></tr></thead>
+		<tbody><tr th:each="a : ${ultimas}">
+			<td class="num" th:text="${a.idAtencion}"></td><td><b th:text="${a.cliente.nombre}"></b></td><td th:text="${a.agente.nombre}"></td><td th:text="${a.categoria.nombre}"></td>
+			<td th:text="${#temporals.format(a.fecha, 'dd/MM/yyyy HH:mm')}"></td>
+			<td><span th:classappend="${a.estado=='ATENDIDA'}?'tag':(${a.estado=='PENDIENTE'}?'tag warn':'tag info')" th:text="${a.estado}"></span></td>
+		</tr></tbody></table>
 	</div>
 </main>
 </body>

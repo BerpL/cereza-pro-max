@@ -1,26 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8">
-<title>Cereza Pro Max - Reporte de envíos por estado</title>
-<link rel="stylesheet" th:href="@{/css/app.css}">
-</head>
-<body>
-<header th:replace="~{layout :: cabecera}"></header>
-<main>
-	<h1>Reporte de envíos de mensajes por estado</h1>
-	<div class="card">
-		<table>
-			<tr><th>Estado de envío</th><th>Cantidad de mensajes</th><th>Gráfico</th></tr>
-			<tr th:each="f : ${filas}">
-				<td><span th:classappend="${f[0] == 'ENVIADO'} ? 'tag' : 'tag off'" th:text="${f[0]}"></span></td>
-				<td th:text="${f[1]}"></td>
-				<td><div th:style="'height:16px;background:#b3133b;width:' + (${f[1]} * 40) + 'px'"></div></td>
-			</tr>
-		</table>
-		<br>
-		<a class="btn" th:href="@{/reportes/atenciones-por-agente}">Reporte de atenciones por agente</a>
-		<button class="btn sec" type="button" onclick="window.print()">Imprimir / PDF</button>
+<head><meta charset="UTF-8"><title>Cereza Pro Max - Reporte de envíos por estado</title><link rel="stylesheet" th:href="@{/css/app.css(v=2)}"></head>
+<body th:replace="~{layout :: shell('r-estado', ${ {{'Reportes', null}, {'Envíos por estado', null}} })}">
+<main id="page">
+	<div class="page-head"><div><h1>Envíos de mensajes por estado</h1><p>Cuántos mensajes se enviaron y cuántos duplicados se evitaron</p></div><button class="btn sec" type="button" onclick="window.print()"><svg th:replace="~{layout :: ic('print')}"></svg>Imprimir / PDF</button></div>
+	<div class="card" th:with="total=${#aggregates.sum(filas.![#this[1]])}">
+		<table><thead><tr><th>Estado de envío</th><th>Mensajes</th><th>Porcentaje</th><th style="width:45%">Gráfico</th></tr></thead>
+		<tbody><tr th:each="f : ${filas}">
+			<td><span th:classappend="${f[0]=='ENVIADO'}?'tag':(${f[0]=='PENDIENTE'}?'tag warn':'tag off')" th:text="${f[0]}"></span></td>
+			<td th:text="${f[1]}"></td><td th:text="${#numbers.formatDecimal(f[1] * 100.0 / total, 1, 1)} + ' %'"></td>
+			<td><div class="bar-wrap"><div class="bar" th:style="'width:' + (${f[1]} * 100 / ${total}) + '%;background:' + (${f[0]=='ENVIADO'} ? 'var(--ok)' : (${f[0]=='PENDIENTE'} ? '#c58a00' : 'var(--bad)'))"></div></div></td>
+		</tr></tbody></table>
+		<div class="actions"><a class="btn sec" th:href="@{/reportes/atenciones-por-agente}"><svg th:replace="~{layout :: ic('back')}"></svg>Atenciones por agente</a></div>
 	</div>
 </main>
 </body>
