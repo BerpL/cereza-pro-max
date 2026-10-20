@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title>Cereza Pro Max - Reporte de atenciones por agente</title><link rel="stylesheet" th:href="@{/css/app.css(v=7)}"></head>
+<head><meta charset="UTF-8"><title>Cereza Pro Max - Reporte de atenciones por agente</title><link rel="stylesheet" th:href="@{/css/app.css(v=8)}"></head>
 <body th:replace="~{layout :: shell('r-agente', ${ {{'Reportes', null}, {'Atenciones por agente', null}} })}">
 <main id="page">
 	<div class="page-head"><div><h1>Atenciones por agente</h1><p>Productividad del equipo en un rango de fechas</p></div><button class="btn sec" type="button" onclick="window.print()"><svg th:replace="~{layout :: ic('print')}"></svg>Imprimir / PDF</button></div>

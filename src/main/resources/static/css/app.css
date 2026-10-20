@@ -93,7 +93,8 @@ td.num{color:var(--mute);font-variant-numeric:tabular-nums;width:48px}
 .inbox{display:grid;grid-template-columns:300px 1fr 280px;gap:0;background:var(--paper);border:1px solid var(--hair);border-radius:var(--r);overflow:hidden;height:calc(100vh - 62px - 32px - 104px);min-height:560px}
 .inbox .col{min-width:0;min-height:0;display:flex;flex-direction:column}
 .inbox .col+.col{border-left:1px solid var(--hair)}
-.inbox .col-h{padding:16px 18px;border-bottom:1px solid var(--hair2);display:flex;align-items:center;justify-content:space-between;gap:10px}
+.inbox .col-h{padding:16px 18px;border-bottom:1px solid var(--hair2);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.inbox .col-h .sem-legend{width:100%;margin:6px 0 0;gap:12px;font-size:11px}
 .inbox .col-h h2{margin:0;font-size:16px}
 .convs{overflow:auto;flex:1;min-height:0}
 .conv{display:flex;gap:12px;padding:13px 18px;border-bottom:1px solid var(--hair2);color:inherit;align-items:flex-start}
