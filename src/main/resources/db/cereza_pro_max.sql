@@ -87,7 +87,7 @@ INSERT INTO cliente (nombre, telefono, correo, fecha_registro) VALUES
 ('ITAN Comercial', '+51926052598', 'ventas@itan.com', NOW());
 
 INSERT INTO agente (nombre, turno, id_usuario) VALUES
-('Luis Quispe', 'MAÑANA', 3),
+('Luis Quispe', 'MANANA', 3),
 ('Brenda Cornejo', 'TARDE', NULL),
 ('Ricardo Ramirez', 'NOCHE', NULL);
 
