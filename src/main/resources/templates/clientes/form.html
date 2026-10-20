@@ -1,29 +1,20 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8">
-<title>Cereza Pro Max - Cliente</title>
-<link rel="stylesheet" th:href="@{/css/app.css}">
-</head>
-<body>
-<header th:replace="~{layout :: cabecera}"></header>
-<main>
-	<h1 th:text="${cliente.idCliente == null} ? 'Registrar cliente' : 'Editar cliente'"></h1>
-	<div class="card">
-		<form th:action="@{/clientes/guardar}" th:object="${cliente}" method="post">
-			<input type="hidden" th:field="*{idCliente}">
-			<input type="hidden" th:field="*{estado}">
-			<input type="hidden" th:field="*{fechaRegistro}">
-			<label>Nombre</label><input th:field="*{nombre}">
-			<p class="error" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></p>
-			<label>Teléfono (WhatsApp)</label><input th:field="*{telefono}">
-			<p class="error" th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"></p>
-			<label>Correo</label><input th:field="*{correo}">
-			<br><br>
-			<button class="btn" type="submit">Guardar</button>
-			<a class="btn sec" th:href="@{/clientes}">Cancelar</a>
-		</form>
-	</div>
+<head><meta charset="UTF-8"><title>Cereza Pro Max - Cliente</title><link rel="stylesheet" th:href="@{/css/app.css(v=2)}"></head>
+<body th:replace="~{layout :: shell('clientes', ${ {{'Mantenimientos', null}, {'Clientes', '/clientes'}, {cliente.idCliente == null ? 'Nuevo cliente' : 'Editar cliente', null}} })}">
+<main id="page">
+	<a class="btn ghost" th:href="@{/clientes}"><svg th:replace="~{layout :: ic('back')}"></svg>Volver a clientes</a>
+	<div class="page-head"><div><h1 th:text="${cliente.idCliente == null} ? 'Registrar cliente' : 'Editar cliente'"></h1><p>Los campos marcados son obligatorios</p></div></div>
+	<form class="card" th:action="@{/clientes/guardar}" th:object="${cliente}" method="post" style="max-width:820px">
+		<h2>Datos del cliente</h2>
+		<input type="hidden" th:field="*{idCliente}"><input type="hidden" th:field="*{estado}"><input type="hidden" th:field="*{fechaRegistro}">
+		<div class="grid">
+			<div class="full"><label>Nombre o razón social *</label><input th:field="*{nombre}" placeholder="Ej. Javier Meliton"><p class="error" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></p></div>
+			<div><label>Teléfono WhatsApp *</label><input th:field="*{telefono}" placeholder="+51 9XX XXX XXX"><small class="hint">Con código de país, sin espacios</small><p class="error" th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"></p></div>
+			<div><label>Correo</label><input th:field="*{correo}" placeholder="cliente@correo.com"></div>
+		</div>
+		<div class="actions"><button class="btn" type="submit"><svg th:replace="~{layout :: ic('check')}"></svg>Guardar</button><a class="btn sec" th:href="@{/clientes}">Cancelar</a></div>
+	</form>
 </main>
 </body>
 </html>

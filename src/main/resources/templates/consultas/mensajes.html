@@ -1,43 +1,30 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8">
-<title>Cereza Pro Max - Consulta de mensajes</title>
-<link rel="stylesheet" th:href="@{/css/app.css}">
-</head>
-<body>
-<header th:replace="~{layout :: cabecera}"></header>
-<main>
-	<h1>Consulta de mensajes por cliente o campaña</h1>
-	<div class="card">
-		<form th:action="@{/consultas/mensajes}" method="get">
-			<label>Cliente</label>
-			<select name="idCliente">
-				<option value="">-- Todos --</option>
-				<option th:each="c : ${clientes}" th:value="${c.idCliente}" th:text="${c.nombre}" th:selected="${c.idCliente == idCliente}"></option>
-			</select>
-			<label>Campaña</label>
-			<select name="idCampana">
-				<option value="">-- Todas --</option>
-				<option th:each="k : ${campanas}" th:value="${k.idCampana}" th:text="${k.nombre}" th:selected="${k.idCampana == idCampana}"></option>
-			</select>
-			<br><br>
-			<button class="btn" type="submit">Consultar</button>
-		</form>
-	</div>
-	<div class="card" th:if="${mensajes != null}">
-		<table>
-			<tr><th>ID</th><th>Cliente</th><th>Campaña</th><th>Contenido</th><th>Estado de envío</th><th>Fecha</th></tr>
-			<tr th:each="m : ${mensajes}">
-				<td th:text="${m.idMensaje}"></td>
-				<td th:text="${m.atencion.cliente.nombre}"></td>
-				<td th:text="${m.campana != null} ? ${m.campana.nombre} : '-'"></td>
-				<td th:text="${m.contenido}"></td>
-				<td><span th:classappend="${m.estadoEnvio == 'ENVIADO'} ? 'tag' : 'tag off'" th:text="${m.estadoEnvio}"></span></td>
-				<td th:text="${#temporals.format(m.fechaEnvio, 'dd/MM/yyyy HH:mm')}"></td>
-			</tr>
-		</table>
-	</div>
+<head><meta charset="UTF-8"><title>Cereza Pro Max - Consulta de mensajes</title><link rel="stylesheet" th:href="@{/css/app.css(v=2)}"></head>
+<body th:replace="~{layout :: shell('c-mensajes', ${ {{'Consultas', null}, {'Mensajes', null}} })}">
+<main id="page">
+	<div class="page-head"><div><h1>Consulta de mensajes</h1><p>Hilo de mensajes por cliente o campaña, agrupado por atención</p></div></div>
+	<form class="card" th:action="@{/consultas/mensajes}" method="get">
+		<div class="filters">
+			<div><label>Cliente</label><select name="idCliente"><option value="">-- Todos --</option><option th:each="c : ${clientes}" th:value="${c.idCliente}" th:text="${c.nombre}" th:selected="${c.idCliente == idCliente}"></option></select></div>
+			<div><label>Campaña</label><select name="idCampana"><option value="">-- Todas --</option><option th:each="k : ${campanas}" th:value="${k.idCampana}" th:text="${k.nombre}" th:selected="${k.idCampana == idCampana}"></option></select></div>
+			<div class="go"><button class="btn" type="submit"><svg th:replace="~{layout :: ic('search')}"></svg>Consultar</button><a class="btn sec" th:href="@{/consultas/atenciones}">Ver atenciones</a></div>
+		</div>
+	</form>
+	<th:block th:if="${mensajes != null}">
+		<div class="legend"><span><i style="background:var(--ok)"></i>Enviado</span><span><i style="background:var(--bad)"></i>Duplicado (no se reenvió)</span><span><i style="background:#c58a00"></i>Pendiente</span><span style="margin-left:auto" th:text="${#lists.size(mensajes)} + ' mensajes'"></span></div>
+		<div class="empty card" th:if="${#lists.isEmpty(mensajes)}"><svg th:replace="~{layout :: ic('chat')}"></svg><div>No hay mensajes para ese filtro.</div></div>
+		<div class="thread" th:each="h : ${hilos}" th:with="at=${h.key}">
+			<div class="th"><div><b th:text="'Atención #' + ${at.idAtencion} + ' · ' + ${at.cliente.nombre}"></b><br><small th:text="${at.categoria.nombre} + ' · atendió ' + ${at.agente.nombre} + ' · ' + ${#temporals.format(at.fecha, 'dd/MM/yyyy HH:mm')}"></small></div>
+				<span th:classappend="${at.estado=='ATENDIDA'}?'tag':(${at.estado=='PENDIENTE'}?'tag warn':'tag info')" th:text="${at.estado}"></span></div>
+			<div class="body">
+				<div th:each="m : ${h.value}" class="bubble" th:classappend="${m.estadoEnvio=='DUPLICADO'}?'dup':(${m.estadoEnvio=='PENDIENTE'}?'pend':'')">
+					<p th:text="${m.contenido}"></p>
+					<div class="meta"><span th:text="${m.campana != null} ? ${m.campana.nombre} : 'Sin campaña'"></span><span><span class="st" th:text="${m.estadoEnvio}"></span> · <span th:text="${m.fechaEnvio != null} ? ${#temporals.format(m.fechaEnvio, 'dd/MM HH:mm')} : '--'"></span></span></div>
+				</div>
+			</div>
+		</div>
+	</th:block>
 </main>
 </body>
 </html>

@@ -1,23 +1,78 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8">
-<title>Cereza Pro Max</title>
-<link rel="stylesheet" th:href="@{/css/app.css}">
-</head>
+<head><meta charset="UTF-8"><title>Cereza Pro Max</title><link rel="stylesheet" th:href="@{/css/app.css(v=2)}"></head>
+
 <body>
-<header th:fragment="cabecera">
-	<div><strong>Cereza Pro Max</strong> · Contact Center WhatsApp</div>
-	<nav>
-		<a th:href="@{/}">Panel</a>
-		<a th:href="@{/clientes}" th:if="${session.rol == 'ADMINISTRADOR'}">Clientes</a>
-		<a th:href="@{/agentes}" th:if="${session.rol == 'ADMINISTRADOR'}">Agentes</a>
-		<a th:href="@{/categorias}" th:if="${session.rol == 'ADMINISTRADOR'}">Categorías</a>
-		<a th:href="@{/consultas/atenciones}" th:if="${session.rol != 'AGENTE'}">Consultas</a>
-		<a th:href="@{/reportes/atenciones-por-agente}" th:if="${session.rol != 'AGENTE'}">Reportes</a>
-		<a th:href="@{/atenciones/registro}" th:if="${session.rol != 'SUPERVISOR'}">Registrar atención</a>
-		<a th:href="@{/logout}" th:text="'Salir (' + ${session.usuario.nombre} + ')'">Salir</a>
-	</nav>
-</header>
+<!-- iconos -->
+<svg th:fragment="ic(name)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+	<th:block th:switch="${name}">
+		<th:block th:case="'home'"><path d="M3 11l9-8 9 8v9a2 2 0 0 1-2 2h-4v-7H9v7H5a2 2 0 0 1-2-2z"/></th:block>
+		<th:block th:case="'users'"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></th:block>
+		<th:block th:case="'headset'"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></th:block>
+		<th:block th:case="'tag'"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></th:block>
+		<th:block th:case="'search'"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></th:block>
+		<th:block th:case="'chat'"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></th:block>
+		<th:block th:case="'chart'"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></th:block>
+		<th:block th:case="'send'"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></th:block>
+		<th:block th:case="'out'"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></th:block>
+		<th:block th:case="'plus'"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></th:block>
+		<th:block th:case="'edit'"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></th:block>
+		<th:block th:case="'toggle'"><rect x="1" y="5" width="22" height="14" rx="7"/><circle cx="16" cy="12" r="3"/></th:block>
+		<th:block th:case="'back'"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></th:block>
+		<th:block th:case="'check'"><polyline points="20 6 9 17 4 12"/></th:block>
+		<th:block th:case="'print'"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></th:block>
+		<th:block th:case="'inbox'"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></th:block>
+		<th:block th:case="'shield'"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></th:block>
+	</th:block>
+</svg>
+</body>
+
+<!-- cascaron: sidebar + topbar; crumbs = lista de [texto, url] -->
+<body th:fragment="shell(active, crumbs)"><div class="app">
+	<aside class="sidebar">
+		<div class="brand"><div class="logo">CPM</div><div><b>Cereza Pro Max</b><small>Contact Center WhatsApp</small></div></div>
+		<nav class="nav">
+			<div class="nav-sec">General</div>
+			<a th:href="@{/}" th:classappend="${active=='panel'}?'active'"><svg th:replace="~{layout :: ic('home')}"></svg>Panel</a>
+			<th:block th:if="${session.rol == 'ADMINISTRADOR'}">
+				<div class="nav-sec">Mantenimientos</div>
+				<a th:href="@{/clientes}" th:classappend="${active=='clientes'}?'active'"><svg th:replace="~{layout :: ic('users')}"></svg>Clientes</a>
+				<a th:href="@{/agentes}" th:classappend="${active=='agentes'}?'active'"><svg th:replace="~{layout :: ic('headset')}"></svg>Agentes</a>
+				<a th:href="@{/categorias}" th:classappend="${active=='categorias'}?'active'"><svg th:replace="~{layout :: ic('tag')}"></svg>Categorías</a>
+			</th:block>
+			<th:block th:if="${session.rol != 'SUPERVISOR'}">
+				<div class="nav-sec">Operación</div>
+				<a th:href="@{/atenciones/registro}" th:classappend="${active=='registro'}?'active'"><svg th:replace="~{layout :: ic('send')}"></svg>Registrar atención</a>
+			</th:block>
+			<th:block th:if="${session.rol != 'AGENTE'}">
+				<div class="nav-sec">Consultas</div>
+				<a th:href="@{/consultas/atenciones}" th:classappend="${active=='c-atenciones'}?'active'"><svg th:replace="~{layout :: ic('search')}"></svg>Atenciones</a>
+				<a th:href="@{/consultas/mensajes}" th:classappend="${active=='c-mensajes'}?'active'"><svg th:replace="~{layout :: ic('chat')}"></svg>Mensajes</a>
+				<div class="nav-sec">Reportes</div>
+				<a th:href="@{/reportes/atenciones-por-agente}" th:classappend="${active=='r-agente'}?'active'"><svg th:replace="~{layout :: ic('chart')}"></svg>Atenciones por agente</a>
+				<a th:href="@{/reportes/envios-por-estado}" th:classappend="${active=='r-estado'}?'active'"><svg th:replace="~{layout :: ic('inbox')}"></svg>Envíos por estado</a>
+			</th:block>
+		</nav>
+		<div class="foot">Lenguaje de Programación II · Cibertec 2026</div>
+	</aside>
+	<div class="main">
+		<header class="topbar">
+			<nav class="crumbs">
+				<a th:href="@{/}">Inicio</a>
+				<th:block th:each="c, it : ${crumbs}">
+					<span class="sep">/</span>
+					<a th:if="${!it.last and c[1] != null}" th:href="@{${c[1]}}" th:text="${c[0]}"></a>
+					<span th:if="${!it.last and c[1] == null}" th:text="${c[0]}"></span>
+					<span th:if="${it.last}" class="cur" th:text="${c[0]}"></span>
+				</th:block>
+			</nav>
+			<div class="user">
+				<div class="chip"><div class="avatar" th:text="${#strings.substring(session.usuario.nombre,0,1)}">A</div><div><b th:text="${session.usuario.nombre}">Usuario</b><small th:text="${#strings.capitalize(#strings.toLowerCase(session.rol))}">Rol</small></div></div>
+				<a class="btn-out" th:href="@{/logout}"><svg th:replace="~{layout :: ic('out')}"></svg>Salir</a>
+			</div>
+		</header>
+		<main class="content" th:insert="~{:: #page}"></main>
+	</div>
+</div>
 </body>
 </html>

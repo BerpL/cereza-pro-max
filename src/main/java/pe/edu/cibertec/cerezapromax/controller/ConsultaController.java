@@ -1,6 +1,11 @@
 package pe.edu.cibertec.cerezapromax.controller;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -10,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpSession;
+import pe.edu.cibertec.cerezapromax.model.Atencion;
+import pe.edu.cibertec.cerezapromax.model.Mensaje;
 import pe.edu.cibertec.cerezapromax.repository.AtencionRepository;
 import pe.edu.cibertec.cerezapromax.repository.CampanaRepository;
 import pe.edu.cibertec.cerezapromax.repository.ClienteRepository;
@@ -59,7 +66,15 @@ public class ConsultaController {
 			return "redirect:/login";
 		}
 		if (idCliente != null || idCampana != null) {
-			model.addAttribute("mensajes", mensajeRepository.buscarPorClienteOCampana(idCliente, idCampana));
+			List<Mensaje> mensajes = mensajeRepository.buscarPorClienteOCampana(idCliente, idCampana);
+			// agrupar por atencion (la mas reciente primero) para mostrarlos como hilo de chat
+			Map<Atencion, List<Mensaje>> hilos = new LinkedHashMap<>();
+			mensajes.stream()
+					.sorted(Comparator.comparing((Mensaje m) -> m.getAtencion().getIdAtencion()).reversed()
+							.thenComparing(Mensaje::getIdMensaje))
+					.forEach(m -> hilos.computeIfAbsent(m.getAtencion(), k -> new ArrayList<>()).add(m));
+			model.addAttribute("mensajes", mensajes);
+			model.addAttribute("hilos", hilos);
 		}
 		model.addAttribute("clientes", clienteRepository.findAll());
 		model.addAttribute("campanas", campanaRepository.findAll());
