@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title>Cereza Pro Max - Panel</title><link rel="stylesheet" th:href="@{/css/app.css(v=5)}"></head>
+<head><meta charset="UTF-8"><title>Cereza Pro Max - Panel</title><link rel="stylesheet" th:href="@{/css/app.css(v=6)}"></head>
 <body th:replace="~{layout :: shell('panel', ${ {{'Panel', null}} })}">
 <main id="page">
 	<div class="page-head"><div><h1>Panel de atención</h1><p>Resumen del contact center</p></div>
-		<a class="btn" th:href="@{/bandeja}"><svg th:replace="~{layout :: ic('chat')}"></svg>Abrir bandeja</a></div>
+		<a class="btn" th:href="@{/bandeja}"><svg th:replace="~{layout :: ic('chat')}"></svg>Ir a la bandeja</a></div>
 	<div class="kpis">
 		<div class="kpi"><div class="ic"><svg th:replace="~{layout :: ic('users')}"></svg></div><div class="eyebrow">Clientes</div><b th:text="${totalClientes}">0</b><span>registrados en el sistema</span></div>
 		<div class="kpi"><div class="ic"><svg th:replace="~{layout :: ic('headset')}"></svg></div><div class="eyebrow">Agentes</div><b th:text="${totalAgentes}">0</b><span>registrados en el sistema</span></div>

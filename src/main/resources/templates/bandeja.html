@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title>Cereza Pro Max - Bandeja de atención</title><link rel="stylesheet" th:href="@{/css/app.css(v=5)}"></head>
+<head><meta charset="UTF-8"><title>Cereza Pro Max - Bandeja de atención</title><link rel="stylesheet" th:href="@{/css/app.css(v=6)}"></head>
 <body th:replace="~{layout :: shell('bandeja', ${ {{'Operación', null}, {'Bandeja de atención', null}} })}">
 <main id="page">
 	<div class="page-head"><div><div class="eyebrow">Operación</div><h1>Bandeja de atención</h1></div>
-		<p th:if="${agente != null}" th:text="'Atendiendo como ' + ${agente.nombre}"></p></div>
+		<p th:if="${agente != null and puedeResponder}" th:text="'Atendiendo como ' + ${agente.nombre}"></p></div>
 	<div class="inbox">
 		<!-- conversaciones -->
 		<section class="col">
@@ -24,7 +24,7 @@
 		<!-- hilo -->
 		<section class="col" th:if="${cliente != null}">
 			<div class="col-h"><div><h2 th:text="${cliente.nombre}"></h2><span class="eyebrow" th:text="${cliente.telefono}"></span></div>
-				<a class="btn sec" th:href="@{/consultas/mensajes(idCliente=${cliente.idCliente})}"><svg th:replace="~{layout :: ic('search')}"></svg>Ver historial</a></div>
+				<a class="btn sec" th:if="${session.rol != 'AGENTE'}" th:href="@{/consultas/mensajes(idCliente=${cliente.idCliente})}"><svg th:replace="~{layout :: ic('search')}"></svg>Auditoría</a></div>
 			<div class="chat" id="chat">
 				<div class="sys" th:if="${#lists.isEmpty(hilo)}"><b>Sin atenciones</b>Este cliente aún no tiene atenciones registradas. Escribe el primer mensaje abajo.</div>
 				<th:block th:each="a : ${hilo}">

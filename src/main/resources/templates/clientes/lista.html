@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title>Cereza Pro Max - Clientes</title><link rel="stylesheet" th:href="@{/css/app.css(v=5)}"></head>
+<head><meta charset="UTF-8"><title>Cereza Pro Max - Clientes</title><link rel="stylesheet" th:href="@{/css/app.css(v=6)}"></head>
 <body th:replace="~{layout :: shell('clientes', ${ {{'Mantenimientos', null}, {'Clientes', null}} })}">
 <main id="page">
 	<div class="page-head"><div><h1>Clientes</h1><p>Personas y empresas que se atienden por WhatsApp</p></div><a class="btn" th:href="@{/clientes/nuevo}"><svg th:replace="~{layout :: ic('plus')}"></svg>Nuevo registro</a></div>

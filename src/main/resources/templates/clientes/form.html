@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title>Cereza Pro Max - Cliente</title><link rel="stylesheet" th:href="@{/css/app.css(v=5)}"></head>
+<head><meta charset="UTF-8"><title>Cereza Pro Max - Cliente</title><link rel="stylesheet" th:href="@{/css/app.css(v=6)}"></head>
 <body th:replace="~{layout :: shell('clientes', ${ {{'Mantenimientos', null}, {'Clientes', '/clientes'}, {cliente.idCliente == null ? 'Nuevo cliente' : 'Editar cliente', null}} })}">
 <main id="page">
 	<a class="btn ghost" th:href="@{/clientes}"><svg th:replace="~{layout :: ic('back')}"></svg>Volver a clientes</a>

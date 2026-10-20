@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title>Cereza Pro Max - Reporte de atenciones por agente</title><link rel="stylesheet" th:href="@{/css/app.css(v=5)}"></head>
+<head><meta charset="UTF-8"><title>Cereza Pro Max - Reporte de atenciones por agente</title><link rel="stylesheet" th:href="@{/css/app.css(v=6)}"></head>
 <body th:replace="~{layout :: shell('r-agente', ${ {{'Reportes', null}, {'Atenciones por agente', null}} })}">
 <main id="page">
 	<div class="page-head"><div><h1>Atenciones por agente</h1><p>Productividad del equipo en un rango de fechas</p></div><button class="btn sec" type="button" onclick="window.print()"><svg th:replace="~{layout :: ic('print')}"></svg>Imprimir / PDF</button></div>
@@ -8,7 +8,7 @@
 		<div class="filters">
 			<div><label>Desde</label><input type="date" name="desde" th:value="${desde}" required></div>
 			<div><label>Hasta</label><input type="date" name="hasta" th:value="${hasta}" required></div>
-			<div class="go"><button class="btn" type="submit"><svg th:replace="~{layout :: ic('chart')}"></svg>Generar</button><a class="btn sec" th:href="@{/reportes/envios-por-estado}">Envíos por estado</a></div>
+			<div class="go"><button class="btn" type="submit"><svg th:replace="~{layout :: ic('chart')}"></svg>Generar</button></div>
 		</div>
 	</form>
 	<div class="card">

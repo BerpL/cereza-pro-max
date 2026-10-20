@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title>Cereza Pro Max</title><link rel="stylesheet" th:href="@{/css/app.css(v=5)}"></head>
+<head><meta charset="UTF-8"><title>Cereza Pro Max</title><link rel="stylesheet" th:href="@{/css/app.css(v=6)}"></head>
 
 <body>
 <!-- logo -->
@@ -54,7 +54,6 @@
 			</th:block>
 			<div class="nav-sec">Operación</div>
 			<a th:href="@{/bandeja}" th:classappend="${active=='bandeja'}?'active'"><svg th:replace="~{layout :: ic('chat')}"></svg>Bandeja de atención</a>
-			<a th:if="${session.rol != 'SUPERVISOR'}" th:href="@{/atenciones/registro}" th:classappend="${active=='registro'}?'active'"><svg th:replace="~{layout :: ic('send')}"></svg>Registrar atención</a>
 			<th:block th:if="${session.rol != 'AGENTE'}">
 				<div class="nav-sec">Consultas</div>
 				<a th:href="@{/consultas/atenciones}" th:classappend="${active=='c-atenciones'}?'active'"><svg th:replace="~{layout :: ic('search')}"></svg>Atenciones</a>
