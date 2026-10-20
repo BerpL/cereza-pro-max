@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title>Cereza Pro Max - Bandeja de atención</title><link rel="stylesheet" th:href="@{/css/app.css(v=8)}"></head>
+<head><meta charset="UTF-8"><title>Cereza Pro Max - Bandeja de atención</title><link rel="stylesheet" th:href="@{/css/app.css(v=10)}"></head>
 <body th:replace="~{layout :: shell('bandeja', ${ {{'Operación', null}, {'Bandeja de atención', null}} })}">
 <main id="page">
 	<div class="page-head"><div><div class="eyebrow">Operación</div><h1>Bandeja de atención</h1></div>
@@ -8,9 +8,10 @@
 	<div class="inbox">
 		<!-- conversaciones -->
 		<section class="col">
-			<div class="col-h"><h2>Conversaciones</h2><span class="sem-legend"><span><i class="sem-ok"></i>Atendida</span><span><i class="sem-warn"></i>Pendiente</span><span><i class="sem-info"></i>En curso</span></span></div>
+			<div class="col-h"><h2>Conversaciones</h2><span class="sem-legend"><span><i class="sem-ok"></i>Atendida</span><span><i class="sem-warn"></i>Pendiente</span><span><i class="sem-info"></i>En curso</span><span><i class="sem-off"></i>Sin atenciones</span></span></div>
+			<div class="convs-tools"><input type="search" id="buscar" placeholder="Buscar cliente"><label class="tgl"><input type="checkbox" id="soloPend">Solo pendientes</label></div>
 			<div class="convs">
-				<a th:each="c : ${conversaciones}" class="conv" th:classappend="(${cliente != null and c.cliente.idCliente == cliente.idCliente}?'active ':'') + (${c.ultimo == null} ? '' : (${c.ultimo.atencion.estado=='ATENDIDA'}?'s-ok':(${c.ultimo.atencion.estado=='PENDIENTE'}?'s-warn':'s-info')))" th:href="@{/bandeja(idCliente=${c.cliente.idCliente})}">
+				<a th:each="c : ${conversaciones}" th:attr="data-nombre=${#strings.toLowerCase(c.cliente.nombre)}" class="conv" th:classappend="(${cliente != null and c.cliente.idCliente == cliente.idCliente}?'active ':'') + (${c.ultimo == null} ? 's-none' : (${c.ultimo.atencion.estado=='ATENDIDA'}?'s-ok':(${c.ultimo.atencion.estado=='PENDIENTE'}?'s-warn':'s-info')))" th:href="@{/bandeja(idCliente=${c.cliente.idCliente})}">
 					<div class="av" th:text="${#strings.substring(c.cliente.nombre,0,1)}">J</div>
 					<div class="cb">
 						<b><span th:text="${c.cliente.nombre}"></span><small th:text="${c.ultimo != null and c.ultimo.fechaEnvio != null} ? ${#temporals.format(c.ultimo.fechaEnvio, 'dd/MM HH:mm')} : ''"></small></b>
@@ -29,8 +30,11 @@
 				<div class="sys" th:if="${#lists.isEmpty(hilo)}"><b>Sin atenciones</b>Este cliente aún no tiene atenciones registradas. Escribe el primer mensaje abajo.</div>
 				<th:block th:each="a : ${hilo}">
 					<div class="day" th:text="'Atención #' + ${a.idAtencion} + ' · ' + ${#temporals.format(a.fecha, 'dd MMM yyyy HH:mm')}"></div>
-					<div class="sys"><b th:text="${a.categoria.nombre}"></b><span th:text="'Atendió ' + ${a.agente.nombre} + ' · estado ' + ${a.estado}"></span></div>
-					<div th:each="m : ${a.mensajes}" class="bubble" th:classappend="${m.estadoEnvio=='DUPLICADO'}?'dup':(${m.estadoEnvio=='PENDIENTE'}?'pend':'')">
+					<div class="sys"><b th:text="${a.categoria.nombre}"></b><span th:text="'Atendió ' + ${a.agente.nombre} + ' · ' + ${a.estado}"></span>
+						<form th:if="${puedeResponder}" class="st-actions" th:action="@{/bandeja/estado}" method="post"><input type="hidden" name="idAtencion" th:value="${a.idAtencion}"><input type="hidden" name="idCliente" th:value="${cliente.idCliente}">
+							<button th:if="${a.estado != 'ATENDIDA'}" name="estado" value="ATENDIDA" type="submit">Marcar atendida</button>
+							<button th:if="${a.estado != 'PENDIENTE'}" name="estado" value="PENDIENTE" type="submit">Marcar pendiente</button></form></div>
+					<div th:each="m : ${a.mensajes}" class="bubble" th:classappend="(${m.estadoEnvio=='DUPLICADO'}?'dup ':(${m.estadoEnvio=='PENDIENTE'}?'pend ':'')) + (${aStat.last and param.ok != null}?'nuevo':'')">
 						<p th:text="${m.contenido}"></p>
 						<div class="meta"><span th:text="${m.campana != null} ? ${m.campana.nombre} : ''"></span><span><span class="st" th:text="${m.estadoEnvio}"></span> <span th:text="${m.fechaEnvio != null} ? '· ' + ${#temporals.format(m.fechaEnvio, 'HH:mm')} : ''"></span></span></div>
 					</div>
@@ -42,8 +46,9 @@
 					<div><label>Categoría</label><select name="idCategoria" required><option th:each="k : ${categorias}" th:value="${k.idCategoria}" th:text="${k.nombre}"></option></select></div>
 					<div><label>Campaña</label><select name="idCampana"><option value="">Sin campaña</option><option th:each="k : ${campanas}" th:value="${k.idCampana}" th:text="${k.nombre}"></option></select></div>
 				</div>
-				<textarea name="contenido" required placeholder="Escribe la respuesta para el cliente. Una línea por mensaje."></textarea>
-				<div class="send"><small>Se registra como una atención con sus mensajes en una sola transacción. Los repetidos se marcan DUPLICADO.</small><button class="btn" type="submit"><svg th:replace="~{layout :: ic('send')}"></svg>Enviar</button></div>
+				<div class="chips" id="chips"><th:block th:each="e : ${plantillas}"><button type="button" class="qr" th:each="t : ${e.value}" th:attr="data-cat=${e.key},data-texto=${t}" th:text="${#strings.abbreviate(t, 42)}"></button></th:block></div>
+				<textarea name="contenido" id="contenido" required placeholder="Escribe la respuesta. Enter envía, Shift+Enter agrega otra línea (un mensaje por línea)."></textarea>
+				<div class="send"><small id="contador">0 mensajes a enviar · los repetidos se marcan DUPLICADO</small><button class="btn" type="submit"><svg th:replace="~{layout :: ic('send')}"></svg>Enviar</button></div>
 			</form>
 			<div class="composer" th:unless="${puedeResponder}"><small style="color:var(--mute)">El rol Supervisor solo consulta las conversaciones.</small></div>
 		</section>
@@ -67,7 +72,23 @@
 			<a class="btn sec" th:href="@{/clientes/editar/{id}(id=${cliente.idCliente})}" th:if="${session.rol == 'ADMINISTRADOR'}"><svg th:replace="~{layout :: ic('edit')}"></svg>Editar cliente</a>
 		</aside>
 	</div>
-	<script>var c=document.getElementById('chat');if(c){c.scrollTop=c.scrollHeight}</script>
+	<div class="toast" th:if="${param.ok != null}"><svg th:replace="~{layout :: ic('check')}"></svg><span th:text="${param.ok[0] == 'estado'} ? 'Estado de la atención actualizado' : 'Mensajes registrados en una sola transacción'"></span></div>
+	<script>
+	(function(){
+		var c=document.getElementById('chat');if(c){c.scrollTop=c.scrollHeight}
+		var ta=document.getElementById('contenido'),cont=document.getElementById('contador');
+		function n(){if(!ta)return;var k=ta.value.split(/\r?\n/).filter(function(l){return l.trim()}).length;cont.textContent=k+(k===1?' mensaje a enviar':' mensajes a enviar')+' · los repetidos se marcan DUPLICADO'}
+		if(ta){ta.addEventListener('input',n);ta.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();if(ta.value.trim())ta.form.requestSubmit()}});n()}
+		var cat=document.querySelector('select[name=idCategoria]');
+		function chips(){if(!cat)return;var nombre=cat.options[cat.selectedIndex].text;document.querySelectorAll('.qr').forEach(function(ch){ch.classList.toggle('hid',ch.dataset.cat!==nombre)})}
+		if(cat){cat.addEventListener('change',chips);chips()}
+		document.querySelectorAll('.qr').forEach(function(ch){ch.addEventListener('click',function(){ta.value=(ta.value.trim()?ta.value.replace(/\s*$/,'')+'\n':'')+ch.dataset.texto;ta.focus();n()})});
+		var q=document.getElementById('buscar'),sp=document.getElementById('soloPend');
+		function filtrar(){var t=(q.value||'').toLowerCase();document.querySelectorAll('.conv').forEach(function(a){var ok=a.dataset.nombre.indexOf(t)>=0&&(!sp.checked||a.classList.contains('s-warn')||a.classList.contains('s-info'));a.classList.toggle('hid',!ok)})}
+		if(q){q.addEventListener('input',filtrar);sp.addEventListener('change',filtrar)}
+		var url=new URL(location.href);if(url.searchParams.has('ok')){url.searchParams.delete('ok');history.replaceState(null,'',url)}
+	})();
+	</script>
 </main>
 </body>
 </html>

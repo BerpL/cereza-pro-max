@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title>Cereza Pro Max - Panel</title><link rel="stylesheet" th:href="@{/css/app.css(v=8)}"></head>
+<head><meta charset="UTF-8"><title>Cereza Pro Max - Panel</title><link rel="stylesheet" th:href="@{/css/app.css(v=10)}"></head>
 <body th:replace="~{layout :: shell('panel', ${ {{'Panel', null}} })}">
 <main id="page">
 	<div class="page-head"><div><h1>Panel de atención</h1><p th:text="${#strings.capitalize(#temporals.format(#temporals.createNow(), 'EEEE d MMMM yyyy', new java.util.Locale('es','PE')))}"></p></div>
@@ -11,12 +11,18 @@
 		<div class="kpi"><div class="ic"><svg th:replace="~{layout :: ic('inbox')}"></svg></div><div class="eyebrow">Atenciones</div><b th:text="${totalAtenciones}">0</b><span>registrados en el sistema</span></div>
 		<div class="kpi hero"><div class="ic"><svg th:replace="~{layout :: ic('shield')}"></svg></div><div class="eyebrow">Duplicados evitados</div><b th:text="${duplicados}">0</b><span th:text="'de ' + ${totalMensajes} + ' mensajes procesados'"></span></div>
 	</div>
+	<div class="two">
 	<div class="card"><h2 class="with-legend">Últimas atenciones <span class="n" th:text="${#lists.size(ultimas)}">0</span><span class="sem-legend"><span><i class="sem-ok"></i>Atendida</span><span><i class="sem-warn"></i>Pendiente</span><span><i class="sem-info"></i>En curso</span></span></h2>
 		<table><thead><tr><th>ID</th><th>Cliente</th><th>Agente</th><th>Categoría</th><th>Fecha</th></tr></thead>
 		<tbody><tr th:each="a : ${ultimas}" th:classappend="${a.estado=='ATENDIDA'}?'r-ok':(${a.estado=='PENDIENTE'}?'r-warn':'r-info')">
 			<td class="num" th:text="${a.idAtencion}"></td><td><b th:text="${a.cliente.nombre}"></b></td><td th:text="${a.agente.nombre}"></td><td th:text="${a.categoria.nombre}"></td>
 			<td th:text="${#temporals.format(a.fecha, 'dd/MM/yyyy HH:mm')}"></td>
 		</tr></tbody></table>
+	</div>
+	<div class="card"><h2>Últimos 7 días</h2>
+		<div class="week"><div th:each="d : ${semana}" th:classappend="${d.hoy}?'hoy'"><b th:text="${d.total}">0</b><i th:style="'height:' + ${d.alto} + '%'"></i><span th:text="${d.etiqueta}">Lun</span></div></div>
+		<p class="hint" style="margin-top:14px">Atenciones registradas por día. El día actual se marca en cereza.</p>
+	</div>
 	</div>
 </main>
 </body>

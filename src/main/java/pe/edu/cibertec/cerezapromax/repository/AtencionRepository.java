@@ -22,4 +22,6 @@ public interface AtencionRepository extends JpaRepository<Atencion, Integer> {
 	List<Atencion> findByClienteIdClienteOrderByFechaAsc(Integer idCliente);
 
 	long countByClienteIdCliente(Integer idCliente);
+
+	List<Atencion> findByFechaAfter(LocalDateTime desde);
 }

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title>Cereza Pro Max - Agente</title><link rel="stylesheet" th:href="@{/css/app.css(v=8)}"></head>
+<head><meta charset="UTF-8"><title>Cereza Pro Max - Agente</title><link rel="stylesheet" th:href="@{/css/app.css(v=10)}"></head>
 <body th:replace="~{layout :: shell('agentes', ${ {{'Mantenimientos', null}, {'Agentes', '/agentes'}, {agente.idAgente == null ? 'Nuevo agente' : 'Editar agente', null}} })}">
 <main id="page">
 	<a class="btn ghost" th:href="@{/agentes}"><svg th:replace="~{layout :: ic('back')}"></svg>Volver a agentes</a>

@@ -1,7 +1,9 @@
 package pe.edu.cibertec.cerezapromax.controller;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -96,6 +98,7 @@ public class BandejaController {
 		model.addAttribute("campanas", campanaRepository.findAll());
 		model.addAttribute("agente", agenteDeSesion(session));
 		model.addAttribute("puedeResponder", !"SUPERVISOR".equals(session.getAttribute("rol")));
+		model.addAttribute("plantillas", plantillas());
 		return "bandeja";
 	}
 
@@ -113,7 +116,39 @@ public class BandejaController {
 		// un mensaje por linea, se despachan en una sola transaccion
 		List<String> mensajes = List.of(contenido.split("\\r?\\n"));
 		atencionService.registrarAtencion(atencion, mensajes, campana);
-		return "redirect:/bandeja?idCliente=" + idCliente;
+		return "redirect:/bandeja?idCliente=" + idCliente + "&ok=enviado";
+	}
+
+	/** Cambia el estado de una atencion desde el hilo, sin enviar mensajes. */
+	@PostMapping("/estado")
+	public String estado(HttpSession session, @RequestParam Integer idAtencion, @RequestParam String estado,
+			@RequestParam Integer idCliente) {
+		if (!LoginController.permitido(session, "AGENTE", "ADMINISTRADOR")) {
+			return "redirect:/login";
+		}
+		atencionRepository.findById(idAtencion).ifPresent(a -> {
+			a.setEstado(estado);
+			atencionRepository.save(a);
+		});
+		return "redirect:/bandeja?idCliente=" + idCliente + "&ok=estado";
+	}
+
+	/** Respuestas rapidas por categoria, para los chips del redactor. */
+	private Map<String, List<String>> plantillas() {
+		Map<String, List<String>> p = new LinkedHashMap<>();
+		p.put("Reserva de servicio", List.of(
+				"Su reserva fue confirmada. Le avisaremos cuando la unidad este en camino.",
+				"Su unidad llega en 10 minutos. Por favor tenga su DNI a la mano.",
+				"Lamentamos la demora, estamos reasignando una unidad cercana."));
+		p.put("Reclamo", List.of(
+				"Recibimos su reclamo y lo estamos revisando. Le respondemos en 24 horas.",
+				"Su reclamo fue atendido. Gracias por su paciencia.",
+				"Le devolvemos el cobro en un plazo de 48 horas."));
+		p.put("Consulta de tarifas", List.of(
+				"La tarifa al aeropuerto es de S/ 60.",
+				"Las tarifas corporativas incluyen espera de 15 minutos sin costo.",
+				"Puede solicitar una cotizacion para rutas fuera de Lima."));
+		return p;
 	}
 
 	/** Agente vinculado al usuario de la sesion, o el primer agente activo si no tiene. */

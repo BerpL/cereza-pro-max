@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title>Cereza Pro Max - Categoría</title><link rel="stylesheet" th:href="@{/css/app.css(v=8)}"></head>
+<head><meta charset="UTF-8"><title>Cereza Pro Max - Categoría</title><link rel="stylesheet" th:href="@{/css/app.css(v=10)}"></head>
 <body th:replace="~{layout :: shell('categorias', ${ {{'Mantenimientos', null}, {'Categorías', '/categorias'}, {categoria.idCategoria == null ? 'Nueva categoría' : 'Editar categoría', null}} })}">
 <main id="page">
 	<a class="btn ghost" th:href="@{/categorias}"><svg th:replace="~{layout :: ic('back')}"></svg>Volver a categorías</a>
