@@ -1,0 +1,20 @@
+Cereza Pro Max - como levantarlo rapido
+
+OPCION 1 (sin Eclipse, la mas rapida, solo si el zip trae target/cereza-pro-max-1.0.0.jar; si no, usa la opcion 2 o en terminal dentro de la carpeta: mvn spring-boot:run):
+1. Tener MySQL 8 corriendo en el puerto 3306. NO hace falta ejecutar ningun script: al arrancar, la app crea la base cereza_pro_max si no existe
+   y carga las tablas y los datos de prueba (schema.sql y data.sql). Cada arranque reinicia los datos de prueba.
+2. Si tu MySQL tiene contrasena para root, abrir src/main/resources/application.properties y ponerla en spring.datasource.password=
+   (si cambias el properties, usa la opcion 2; el jar ya tiene la configuracion con contrasena vacia).
+   Si tu MySQL usa otro puerto (SHOW VARIABLES LIKE 'port'), cambialo en spring.datasource.url.
+3. En una terminal, dentro de esta carpeta, con JDK 17 o 21:
+   java -jar target/cereza-pro-max-1.0.0.jar
+4. Abrir http://localhost:8080/login
+   admin@cereza.com / admin123   supervisor@cereza.com / super123   agente@cereza.com / agente123
+
+OPCION 2 (Eclipse):
+File > Import > Maven > Existing Maven Projects > Root Directory = esta carpeta > Finish.
+(Tambien funciona General > Existing Projects into Workspace porque este zip incluye .project y .classpath)
+Si sale en rojo: clic derecho al proyecto > Maven > Update Project (Alt+F5) > Force Update.
+Clic derecho en CerezaProMaxApplication.java > Run As > Java Application.
+
+Requisitos: JDK 17 o 21 (no 24), MySQL 8 en el puerto 3306.
